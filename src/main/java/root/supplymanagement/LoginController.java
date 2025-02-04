@@ -1,0 +1,97 @@
+package root.supplymanagement;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+import javafx.stage.StageStyle;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class LoginController implements Initializable {
+    @FXML
+    private Label invalidMessageLabel;
+    @FXML
+    private Button loginButton, cancelButton;
+    @FXML
+    private ImageView brandingImageView, lockImageView;
+    @FXML
+    private TextField usernameTextField;
+    @FXML
+    private PasswordField passwordTextField;
+
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle){
+        File brandingFile = new File("Images/KIMSAlogo.jpeg");
+        Image brandingImage = new Image(brandingFile.toURI().toString());
+        brandingImageView.setImage(brandingImage);
+
+        File lockFile = new File("Images/lock.png");
+        Image lockImage = new Image(lockFile.toURI().toString());
+        lockImageView.setImage(lockImage);
+
+        usernameTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                passwordTextField.requestFocus();
+            }
+        });
+
+        passwordTextField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                validateLogin(new ActionEvent(passwordTextField, null));
+            }
+        });
+
+    }
+    @FXML
+    public void loginButton(ActionEvent actionEvent) {
+        if (usernameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
+            invalidMessageLabel.setText("Fields are empty");
+            invalidMessageLabel.setVisible(true);
+        } else {
+            validateLogin(actionEvent);
+        }
+    }
+
+    @FXML
+    protected void onCancelButtonClick() {
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
+        stage.close();
+    }
+
+    public void validateLogin(ActionEvent event) {
+        invalidMessageLabel.setText("Fields are NOT empty");
+        invalidMessageLabel.setVisible(true);
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("home-view.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(root, 780, 550);
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.getCause().printStackTrace();
+        }
+    }
+}

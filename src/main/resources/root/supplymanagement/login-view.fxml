@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="650.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.LoginController">
+   <left>
+      <AnchorPane prefHeight="400.0" prefWidth="270.0" style="-fx-background-color: linear-gradient(to bottom, #0A1743, #1E3C72);" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="brandingImageView" fitHeight="116.0" fitWidth="186.0" layoutX="42.0" layoutY="46.0" pickOnBounds="true" smooth="false">
+               <image>
+                  <Image url="@../../../../../Images/KIMSAlogo.jpeg" />
+               </image>
+            </ImageView>
+            <Label layoutX="56.0" layoutY="195.0" text="KIMSA" textFill="#fcf9f9">
+               <font>
+                  <Font name="DejaVu Serif Bold" size="40.0" />
+               </font>
+            </Label>
+            <Label layoutX="30.0" layoutY="257.0" text="TRADING CO. LTD" textFill="WHITE">
+               <font>
+                  <Font name="DejaVu Serif Bold" size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </left>
+   <right>
+      <AnchorPane prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: FFFAFA;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="lockImageView" fitHeight="62.0" fitWidth="69.0" layoutX="158.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../Images/lock.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="35.0" layoutY="159.0" text="Username:" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="usernameTextField" layoutX="131.0" layoutY="156.0" prefHeight="26.0" prefWidth="173.0" promptText="Username" />
+            <Label layoutX="35.0" layoutY="203.0" text="Password:" wrapText="true">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button fx:id="loginButton" layoutX="35.0" layoutY="263.0" mnemonicParsing="false" onAction="#loginButton" prefHeight="26.0" prefWidth="271.0" style="-fx-background-color: #2565AE;" text="LOGIN" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Button>
+            <Button fx:id="cancelButton" layoutX="35.0" layoutY="307.0" mnemonicParsing="false" onAction="#onCancelButtonClick" prefHeight="26.0" prefWidth="271.0" styleClass="cancelButton" text="CANCEL">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font></Button>
+            <Label fx:id="invalidMessageLabel" alignment="CENTER" layoutX="36.0" layoutY="235.0" prefHeight="18.0" prefWidth="269.0" text="Incorrect username or password" textFill="#f80505" visible="false" />
+            <PasswordField fx:id="passwordTextField" layoutX="131.0" layoutY="200.0" prefHeight="26.0" prefWidth="173.0" promptText="Password" />
+         </children>
+      </AnchorPane>
+   </right>
+</BorderPane>

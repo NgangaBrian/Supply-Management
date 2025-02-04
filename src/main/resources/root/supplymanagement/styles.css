@@ -1,0 +1,140 @@
+.pane-style{
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+.pane-style:hover{
+    -fx-background-color: lightgray;
+    -fx-cursor: hand;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+.pane-style:pressed{
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-background-color: darkgray;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+#logOutPane{
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+#logOutPane:hover{
+    -fx-background-color: #FA8072;
+    -fx-cursor: hand;
+}
+#logOutPane:pressed{
+    -fx-background-color: red;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+
+.button:pressed{
+    -fx-border-color: white;
+    -fx-background-color: blue;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+.cancelButton:pressed{
+    -fx-border-color: white;
+    -fx-background-color: #FA8072;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+
+.dashboard-containers{
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: gray;
+    -fx-border-width: 1px;
+}
+.dashboard-containers:hover{
+    -fx-border-radius: 8px;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+.dashboard-containers:pressed{
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-background-color: darkgray;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+
+.label{
+    -fx-text-fill: black;
+}
+.invoice-container{
+    -fx-background-color: white;
+    -fx-border-radius: 10px;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+.invoice-container:hover{
+    -fx-border-radius: 10px;
+    -fx-background-color: #FF6B6B;
+    -fx-background-radius: 10px;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+.invoice-container:pressed{
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-background-color: red;
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+.invoice-container:hover lable{
+    -fx-text-fill: white;
+}
+.closeBtn{
+    -fx-background-color: transparent;
+}
+.closeBtn:hover{
+    -fx-scale-x: 1.25;
+    -fx-scale-y: 1.25;
+}
+.closeBtn:pressed{
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 0, 1), 10, 0, 0, 3); /* Red shadow */
+}
+.minimize-maximize{
+    -fx-background-color: transparent;
+}
+.minimize-maximize:hover{
+    -fx-scale-x: 1.25;
+    -fx-scale-y: 1.25;
+}
+.minimize-maximize:pressed{
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+.floating-label{
+    -fx-font-size: 14;
+    -fx-text-fill: gray;
+    -fx-translate-y: 5;
+    -fx-transition: all 0.2s ease-in-out;
+}
+.floating-label-focused{
+    -fx-font-size: 12;
+    -fx-text-fill: black;
+    -fx-translate-y: -5;
+}
+.floating-textfield{
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
+    -fx-border-color: gray;
+    -fx-border-width: 1;
+    -fx-padding: 10 5 5 5;
+}
