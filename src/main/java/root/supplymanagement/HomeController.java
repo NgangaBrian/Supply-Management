@@ -60,8 +60,6 @@ public class HomeController implements Initializable {
         applyFadeInAnimation(logOutPane);
     }
 
-
-
     @FXML
     private void handleRecordOrderClick(MouseEvent event) {
         // Add the CSS class
