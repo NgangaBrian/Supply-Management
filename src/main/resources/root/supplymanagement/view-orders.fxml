@@ -12,29 +12,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="567.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.ViewOrdersController">
    <children>
-      <Pane prefHeight="22.0" prefWidth="900.0">
+      <Pane prefHeight="22.0" prefWidth="914.0">
          <children>
-            <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="868.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
+            <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="891.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
                <image>
                   <Image url="@../../../../../Images/closeBtn.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="maximizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="846.0" layoutY="3.0" onMouseClicked="#handleMaximizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
+            <ImageView fx:id="maximizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="869.0" layoutY="3.0" onMouseClicked="#handleMaximizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
                <image>
                   <Image url="@../../../../../Images/maximizeBtn.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="minimizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="824.0" layoutY="3.0" onMouseClicked="#handleMinimizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
+            <ImageView fx:id="minimizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="847.0" layoutY="3.0" onMouseClicked="#handleMinimizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
                <image>
                   <Image url="@../../../../../Images/minimizeBtn.png" />
                </image>
             </ImageView>
          </children>
       </Pane>
-      <Pane prefHeight="5.0" prefWidth="914.0" style="-fx-background-color: #0000FF;" />
+      <Pane prefHeight="3.0" prefWidth="914.0" style="-fx-background-color: #0000FF;" />
       <Label layoutX="43.0" layoutY="26.0" text="Orders">
          <font>
             <Font name="DejaVu Serif Bold" size="24.0" />
@@ -54,29 +53,29 @@
             </Label>
             <Label layoutX="47.0" layoutY="24.0" text="Total Amount">
                <HBox.margin>
-                  <Insets left="80.0" />
+                  <Insets left="50.0" />
                </HBox.margin>
             </Label>
             <Label layoutX="141.0" layoutY="24.0" text="Paid Amount">
                <HBox.margin>
-                  <Insets left="80.0" />
+                  <Insets left="60.0" />
                </HBox.margin>
             </Label>
             <Label layoutX="175.0" layoutY="24.0" text="Balance">
                <HBox.margin>
-                  <Insets left="80.0" />
+                  <Insets left="70.0" />
                </HBox.margin>
             </Label>
             <Label layoutX="664.0" layoutY="24.0" text="Due Date">
                <HBox.margin>
-                  <Insets left="50.0" />
+                  <Insets left="80.0" />
                </HBox.margin>
             </Label>
          </children>
       </HBox>
       <ScrollPane layoutX="43.0" layoutY="165.0" prefHeight="365.0" prefWidth="829.0">
          <content>
-            <VBox fx:id="supplierItems" prefHeight="365.0" prefWidth="813.0" style="-fx-background-color: FFFAFA;" />
+            <VBox fx:id="orderItems" prefHeight="365.0" prefWidth="813.0" style="-fx-background-color: FFFAFA;" />
          </content>
       </ScrollPane>
       <ComboBox layoutX="722.0" layoutY="56.0" prefWidth="150.0" promptText="Last 30 Days" />

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ViewSuppliers implements Initializable {
+public class ViewSuppliersController implements Initializable {
 
     @FXML
     private VBox supplierItems;

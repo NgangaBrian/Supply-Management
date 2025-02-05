@@ -92,6 +92,34 @@ public class HomeController implements Initializable {
         }
     }
 
+    public void openViewOrdersPane(javafx.scene.input.MouseEvent mouseEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view-orders.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 900, 567));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openRecordOrdersPane(javafx.scene.input.MouseEvent mouseEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("record-order.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 816, 628));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void openViewSuppliersPane(javafx.scene.input.MouseEvent mouseEvent){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view-suppliers.fxml"));
