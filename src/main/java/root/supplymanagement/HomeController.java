@@ -92,6 +92,20 @@ public class HomeController implements Initializable {
         }
     }
 
+    public void openViewSuppliersPane(javafx.scene.input.MouseEvent mouseEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view-suppliers.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 900, 567));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void handleLogoutClick(javafx.scene.input.MouseEvent mouseEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout");

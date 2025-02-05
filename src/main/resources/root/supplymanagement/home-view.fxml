@@ -104,7 +104,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="viewSuppliersPane" layoutX="435.0" layoutY="439.0" prefHeight="100.0" prefWidth="130.0" styleClass="pane-style">
+            <Pane fx:id="viewSuppliersPane" layoutX="435.0" layoutY="439.0" onMouseClicked="#openViewSuppliersPane" prefHeight="100.0" prefWidth="130.0" styleClass="pane-style">
                <children>
                   <ImageView fx:id="viewSupplierImage" fitHeight="68.0" fitWidth="93.0" layoutX="31.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
                      <image>
