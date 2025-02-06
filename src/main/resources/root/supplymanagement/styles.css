@@ -156,5 +156,15 @@
     -fx-scale-x: 0.95;
     -fx-scale-y: 0.95;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
-
+}
+.payments-panes{
+    -fx-background-color:  #FFFAFA;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-border-color: lightgray;
+}
+.payments-panes:hover{
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
 }

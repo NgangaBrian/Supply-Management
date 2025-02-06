@@ -48,7 +48,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="recordPaymentPane" layoutX="213.0" layoutY="311.0" prefHeight="100.0" prefWidth="150.0" styleClass="pane-style">
+            <Pane fx:id="recordPaymentPane" layoutX="213.0" layoutY="311.0" onMouseClicked="#openRecordPaymentsPane" prefHeight="100.0" prefWidth="150.0" styleClass="pane-style">
                <children>
                   <ImageView fx:id="recordPaymentImage" fitHeight="67.0" fitWidth="84.0" layoutX="43.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -90,7 +90,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="viewPaymentsPane" layoutX="223.0" layoutY="439.0" prefHeight="100.0" prefWidth="130.0" styleClass="pane-style">
+            <Pane fx:id="viewPaymentsPane" layoutX="223.0" layoutY="439.0" onMouseClicked="#openViewPaymentsPane" prefHeight="100.0" prefWidth="130.0" styleClass="pane-style">
                <children>
                   <ImageView fx:id="viewPaymentsImage" fitHeight="72.0" fitWidth="93.0" layoutX="29.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                      <image>

@@ -12,28 +12,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="567.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.ViewOrdersController">
+<AnchorPane prefHeight="567.0" prefWidth="900.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.ViewOrdersController">
    <children>
-      <Pane prefHeight="22.0" prefWidth="914.0">
+      <Pane layoutY="3.0" prefHeight="22.0" prefWidth="900.0">
          <children>
-            <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="891.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
+            <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="876.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
                <image>
                   <Image url="@../../../../../Images/closeBtn.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="maximizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="869.0" layoutY="3.0" onMouseClicked="#handleMaximizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
+            <ImageView fx:id="maximizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="854.0" layoutY="3.0" onMouseClicked="#handleMaximizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
                <image>
                   <Image url="@../../../../../Images/maximizeBtn.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="minimizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="847.0" layoutY="3.0" onMouseClicked="#handleMinimizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
+            <ImageView fx:id="minimizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="832.0" layoutY="3.0" onMouseClicked="#handleMinimizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
                <image>
                   <Image url="@../../../../../Images/minimizeBtn.png" />
                </image>
             </ImageView>
          </children>
       </Pane>
-      <Pane prefHeight="3.0" prefWidth="914.0" style="-fx-background-color: #0000FF;" />
+      <Pane prefHeight="3.0" prefWidth="900.0" style="-fx-background-color: #0000FF;" />
       <Label layoutX="43.0" layoutY="26.0" text="Orders">
          <font>
             <Font name="DejaVu Serif Bold" size="24.0" />

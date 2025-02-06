@@ -132,6 +132,34 @@ public class HomeController implements Initializable {
         }
     }
 
+    public void openRecordPaymentsPane(javafx.scene.input.MouseEvent mouseEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("record-payment.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 816, 619));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openViewPaymentsPane(javafx.scene.input.MouseEvent mouseEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view-payments.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 1000, 607));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void handleLogoutClick(javafx.scene.input.MouseEvent mouseEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout");
