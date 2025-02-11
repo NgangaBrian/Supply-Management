@@ -13,14 +13,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -55,7 +56,12 @@ public class LoginController implements Initializable {
 
         passwordTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                validateLogin(new ActionEvent(passwordTextField, null));
+                if (usernameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
+                    invalidMessageLabel.setText("Fields are empty");
+                    invalidMessageLabel.setVisible(true);
+                } else {
+                    validateLogin(new ActionEvent(passwordTextField, null));
+                }
             }
         });
 
@@ -77,21 +83,49 @@ public class LoginController implements Initializable {
     }
 
     public void validateLogin(ActionEvent event) {
-        invalidMessageLabel.setText("Fields are NOT empty");
-        invalidMessageLabel.setVisible(true);
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("home-view.fxml"));
-            Stage stage = new Stage();
-            Scene scene = new Scene(root, 780, 550);
-            stage.setScene(scene);
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
 
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.close();
+        DBConnection connect = new DBConnection();
+        Connection connection1 = connect.getConnection();
+
+        String verifyLogin = "SELECT count(1) from users where username = ? AND password = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection1.prepareStatement(verifyLogin);
+            preparedStatement.setString(1, usernameTextField.getText());
+            preparedStatement.setString(2, passwordTextField.getText());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                if (resultSet.getInt(1) == 1){
+                    invalidMessageLabel.setText("Logged in successfully");
+                    invalidMessageLabel.setVisible(true);
+                    invalidMessageLabel.setStyle("-fx-text-fill: green");
+
+                    try {
+                        Parent root = FXMLLoader.load(getClass().getResource("home-view.fxml"));
+                        Stage stage = new Stage();
+                        Scene scene = new Scene(root, 780, 550);
+                        stage.setScene(scene);
+                        stage.initStyle(StageStyle.UNDECORATED);
+                        stage.show();
+
+                        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        currentStage.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        e.getCause().printStackTrace();
+                    }
+                } else {
+                    invalidMessageLabel.setText("Login failed, try again");
+                    invalidMessageLabel.setVisible(true);
+                    invalidMessageLabel.setStyle("-fx-text-fill: red");
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            e.getCause().printStackTrace();
+            e.getCause();
         }
+
     }
 }

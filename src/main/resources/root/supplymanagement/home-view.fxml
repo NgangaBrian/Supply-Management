@@ -178,7 +178,7 @@
                   </Label>
                </children>
             </Pane>
-            <Pane fx:id="overdueInvoicesContainer11" layoutX="688.0" layoutY="87.0" prefHeight="60.0" prefWidth="84.0" styleClass="dashboard-containers">
+            <Pane fx:id="overdueInvoicesContainer11" layoutX="688.0" layoutY="87.0" prefHeight="60.0" prefWidth="84.0" styleClass="dashboard-settings-containers">
                <children>
                   <Label layoutX="20.0" layoutY="38.0" text="Settings">
                      <font>
