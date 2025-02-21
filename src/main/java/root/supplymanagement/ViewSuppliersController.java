@@ -10,9 +10,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class ViewSuppliersController implements Initializable {
@@ -30,38 +33,54 @@ public class ViewSuppliersController implements Initializable {
     }
 
     private void loadImages() {
-        File addSupplierFile = new File("Images/add-user.png");
-        Image addSupplierImage = new Image(addSupplierFile.toURI().toString());
+        Image addSupplierImage = new Image(getClass().getResource("/Images/add-user.png").toExternalForm());
         addBtnImage.setImage(addSupplierImage);
 
-        File exitFile = new File("Images/closeBtn.png");
-        Image exitImage = new Image(exitFile.toURI().toString());
+        Image exitImage = new Image(getClass().getResource("/Images/closeBtn.png").toExternalForm());
         closeBtnImage.setImage(exitImage);
 
-        File minimizeFile = new File("Images/minimizeBtn.png");
-        Image minimizeImage = new Image(minimizeFile.toURI().toString());
+        Image minimizeImage = new Image(getClass().getResource("/Images/minimizeBtn.png").toExternalForm());
         minimizeBtnImage.setImage(minimizeImage);
 
-        File maximizeFile = new File("Images/maximizeBtn.png");
-        Image maximizeImage = new Image(maximizeFile.toURI().toString());
+        Image maximizeImage = new Image(getClass().getResource("/Images/maximizeBtn.png").toExternalForm());
         maximizeBtnImage.setImage(maximizeImage);
     }
 
-    private void loadSupplierData() {
-        Node[] nodes = new Node[10];
-        for (int i = 0; i < nodes.length; i++) {
-            try {
+    public void loadSupplierData() {
+        supplierItems.getChildren().clear(); // Clear existing items
+
+        DBConnection connect = new DBConnection();
+        Connection connection = connect.getConnection();
+
+        String query = "SELECT name, phonenumber, address, email FROM suppliers";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String phone = resultSet.getString("phonenumber");
+                String address = resultSet.getString("address");
+                String email = resultSet.getString("email");
+
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("suppliersItem.fxml"));
                 Node node = loader.load();
 
                 // Get controller and set supplier data
                 SuppliersItemController controller = loader.getController();
-                controller.setSupplierData("Brian Mutwiri", "254790944432", "123 - 60103, Runyenjes", "ngangabrian724@gmail.com");
+                controller.setSupplierData(name, phone, address, email);
+                controller.setViewSuppliersController(this);
 
                 supplierItems.getChildren().add(node);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
         }
     }
 

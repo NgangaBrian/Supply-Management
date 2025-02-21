@@ -21,17 +21,17 @@
          <children>
             <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="769.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
                <image>
-                  <Image url="@../../../../../Images/closeBtn.png" />
+                  <Image url="@../../Images/closeBtn.png" />
                </image>
             </ImageView>
             <ImageView fx:id="maximizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="747.0" layoutY="3.0" onMouseClicked="#handleMaximizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
                <image>
-                  <Image url="@../../../../../Images/maximizeBtn.png" />
+                  <Image url="@../../Images/maximizeBtn.png" />
                </image>
             </ImageView>
             <ImageView fx:id="minimizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="725.0" layoutY="3.0" onMouseClicked="#handleMinimizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
                <image>
-                  <Image url="@../../../../../Images/minimizeBtn.png" />
+                  <Image url="@../../Images/minimizeBtn.png" />
                </image>
             </ImageView>
          </children>

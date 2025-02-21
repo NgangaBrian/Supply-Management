@@ -65,16 +65,13 @@ public class ViewOrdersController implements Initializable {
     }
 
     private void loadImages() {
-        File exitFile = new File("Images/closeBtn.png");
-        Image exitImage = new Image(exitFile.toURI().toString());
+        Image exitImage = new Image(getClass().getResource("/Images/closeBtn.png").toExternalForm());
         closeBtnImage.setImage(exitImage);
 
-        File minimizeFile = new File("Images/minimizeBtn.png");
-        Image minimizeImage = new Image(minimizeFile.toURI().toString());
+        Image minimizeImage = new Image(getClass().getResource("/Images/minimizeBtn.png").toExternalForm());
         minimizeBtnImage.setImage(minimizeImage);
 
-        File maximizeFile = new File("Images/maximizeBtn.png");
-        Image maximizeImage = new Image(maximizeFile.toURI().toString());
+        Image maximizeImage = new Image(getClass().getResource("/Images/maximizeBtn.png").toExternalForm());
         maximizeBtnImage.setImage(maximizeImage);
     }
 

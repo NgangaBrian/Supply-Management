@@ -7,21 +7,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<HBox fx:id="supplietItemView" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="53.0" prefWidth="813.0" styleClass="supplier-item-view" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.SuppliersItemController">
+<HBox fx:id="supplierItemView" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="53.0" prefWidth="813.0" styleClass="supplier-item-view" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.SuppliersItemController">
    <children>
       <Label fx:id="supplierName" prefHeight="18.0" prefWidth="130.0" text="Brian Nganga">
          <HBox.margin>
             <Insets left="20.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="supplierPhone" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="0790944432">
+      <Label fx:id="supplierPhone" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="115.0" text="+254790944432">
          <HBox.margin>
             <Insets left="30.0" />
          </HBox.margin>
       </Label>
       <Label fx:id="supplierEmail" layoutX="43.0" layoutY="28.0" prefHeight="18.0" prefWidth="200.0" text="ngangabrian724@gmail.com">
          <HBox.margin>
-            <Insets left="50.0" />
+            <Insets left="70.0" />
          </HBox.margin>
       </Label>
       <Label fx:id="supplierAddress" layoutX="76.0" layoutY="28.0" prefHeight="18.0" prefWidth="160.0" text="123-60103, Runyenjes">
@@ -33,12 +33,12 @@
          <children>
             <ImageView fx:id="editSupplier" fitHeight="37.0" fitWidth="28.0" layoutX="24.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" styleClass="edit-delete-btn">
                <image>
-                  <Image url="@../../../../../Images/editBtn.png" />
+                  <Image url="@../../Images/editBtn.png" />
                </image>
             </ImageView>
             <ImageView fx:id="deleteSupplier" fitHeight="37.0" fitWidth="28.0" layoutX="69.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" styleClass="edit-delete-btn">
                <image>
-                  <Image url="@../../../../../Images/deleteBtn.png" />
+                  <Image url="@../../Images/deleteBtn.png" />
                </image>
             </ImageView>
          </children>

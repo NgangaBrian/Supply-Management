@@ -200,56 +200,43 @@ public class HomeController implements Initializable {
     }
 
     public void loadImages(){
-        File logoFile = new File("Images/kimsalogo.png");
-        Image logoImage = new Image(logoFile.toURI().toString());
-        logoImageView.setImage(logoImage);
+        Image brandingImage = new Image(getClass().getResource("/Images/kimsalogo.png").toExternalForm());
+        logoImageView.setImage(brandingImage);
 
-        File orderFile = new File("Images/recordOrder.png");
-        Image orderImage = new Image(orderFile.toURI().toString());
+        Image orderImage = new Image(getClass().getResource("/Images/recordOrder.png").toExternalForm());
         recordOrderImage.setImage(orderImage);
 
-        File paymentFile = new File("Images/recordPayment.png");
-        Image paymentImage = new Image(paymentFile.toURI().toString());
+        Image paymentImage = new Image(getClass().getResource("/Images/recordPayment.png").toExternalForm());
         recordPaymentImage.setImage(paymentImage);
 
-        File supplierFile = new File("Images/addSupplier.png");
-        Image supplierImage = new Image(supplierFile.toURI().toString());
+        Image supplierImage = new Image(getClass().getResource("/Images/addSupplier.png").toExternalForm());
         addSupplierImage.setImage(supplierImage);
 
-        File invoiceFile = new File("Images/overdueInvoices.png");
-        Image invoiceImage = new Image(invoiceFile.toURI().toString());
+        Image invoiceImage = new Image(getClass().getResource("/Images/overdueInvoices.png").toExternalForm());
         overdueInvoiceImage.setImage(invoiceImage);
 
-        File ordersFile = new File("Images/viewOrders.png");
-        Image ordersImage = new Image(ordersFile.toURI().toString());
+        Image ordersImage = new Image(getClass().getResource("/Images/viewOrders.png").toExternalForm());
         viewOrdersImage.setImage(ordersImage);
 
-        File viewPaymentsFile = new File("Images/viewPayments.png");
-        Image viewPaymentImage = new Image(viewPaymentsFile.toURI().toString());
+        Image viewPaymentImage = new Image(getClass().getResource("/Images/viewPayments.png").toExternalForm());
         viewPaymentsImage.setImage(viewPaymentImage);
 
-        File viewSupplierFile = new File("Images/viewSuppliers.png");
-        Image viewSuppliersImage = new Image(viewSupplierFile.toURI().toString());
+        Image viewSuppliersImage = new Image(getClass().getResource("/Images/viewSuppliers.png").toExternalForm());
         viewSupplierImage.setImage(viewSuppliersImage);
 
-        File logoutFile = new File("Images/logout.png");
-        Image logOutImage = new Image(logoutFile.toURI().toString());
+        Image logOutImage = new Image(getClass().getResource("/Images/logout.png").toExternalForm());
         logoutImage.setImage(logOutImage);
 
-        File settingsFile = new File("Images/settings.png");
-        Image settingImage = new Image(settingsFile.toURI().toString());
+        Image settingImage = new Image(getClass().getResource("/Images/settings.png").toExternalForm());
         settingsImage.setImage(settingImage);
 
-        File exitFile = new File("Images/closeBtn.png");
-        Image exitImage = new Image(exitFile.toURI().toString());
+        Image exitImage = new Image(getClass().getResource("/Images/closeBtn.png").toExternalForm());
         closeBtnImage.setImage(exitImage);
 
-        File minimizeFile = new File("Images/minimizeBtn.png");
-        Image minimizeImage = new Image(minimizeFile.toURI().toString());
+        Image minimizeImage = new Image(getClass().getResource("/Images/minimizeBtn.png").toExternalForm());
         minimizeBtnImage.setImage(minimizeImage);
 
-        File maximizeFile = new File("Images/maximizeBtn.png");
-        Image maximizeImage = new Image(maximizeFile.toURI().toString());
+        Image maximizeImage = new Image(getClass().getResource("/Images/maximizeBtn.png").toExternalForm());
         maximizeBtnImage.setImage(maximizeImage);
     }
 }

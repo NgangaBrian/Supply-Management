@@ -2,22 +2,29 @@ package root.supplymanagement;
 
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
 
 import java.io.File;
+import java.sql.*;
 
 public class AddSuppliers {
 
     @FXML
-    private Label supplierLabel, phoneNoLabel, emailLabel, addressLabel;
+    private Label supplierLabel, phoneNoLabel, emailLabel, addressLabel, titleLabel;
     @FXML
     private TextField supplierNameTF, phoneNoTF, emailTF, addressTF;
     @FXML
@@ -25,13 +32,60 @@ public class AddSuppliers {
     @FXML
     private Button saveBtn, cancelBtn;
 
+    private Boolean isEditMode = false;
+    private String originalEmail;
+    private ViewSuppliersController viewSuppliersController;
+
+    public void setViewSuppliersController(ViewSuppliersController viewSuppliersController) {
+        this.viewSuppliersController = viewSuppliersController;
+    }
+
+    public void setIsEditMode(String name, String phone, String email, String address) {
+        isEditMode = true;
+        originalEmail = email;
+
+        supplierNameTF.setText(name);
+        phoneNoTF.setText(phone);
+        emailTF.setText(email);
+        addressTF.setText(address);
+
+        saveBtn.setText("Update");
+        titleLabel.setText("Edit Supplier");
+    }
+
     public void initialize(){
         loadImages();
         setupFloatingLabels(supplierNameTF, supplierLabel);
         setupFloatingLabels(phoneNoTF, phoneNoLabel);
         setupFloatingLabels(emailTF, emailLabel);
         setupFloatingLabels(addressTF, addressLabel);
+
+        supplierNameTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                phoneNoTF.requestFocus();
+            }
+        });
+
+        phoneNoTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                emailTF.requestFocus();
+            }
+        });
+
+        emailTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                addressTF.requestFocus();
+            }
+        });
+
+        addressTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                saveDetails();
+            }
+        });
     }
+
+
 
     private void setupFloatingLabels(TextField textField, Label label){
         TranslateTransition moveUp = new TranslateTransition(Duration.millis(200), label);
@@ -52,12 +106,128 @@ public class AddSuppliers {
     }
 
     public void saveDetails(){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Save Details");
-            alert.setHeaderText("Details");
-            alert.setContentText("Details have been saved successfully!");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Save Details");
 
-            alert.showAndWait(); // Shows the alert and waits for the user to close it
+        String supplierName = supplierNameTF.getText().toString();
+        String phoneNo = phoneNoTF.getText().toString();
+        String email = emailTF.getText().toString();
+        String address = addressTF.getText().toString();
+
+        if(supplierName.isEmpty() || phoneNo.isEmpty() || email.isEmpty() || address.isEmpty()){
+            alert.setAlertType(Alert.AlertType.WARNING);
+            alert.setContentText("All fields are required!");
+            alert.showAndWait();
+        }
+        else{
+            if(isEditMode){
+                updateSupplier(supplierName, phoneNo, email, address);
+            } else {
+                addNewSupplier(supplierName, phoneNo, email, address);
+            }
+
+
+        }
+
+    }
+    private void addNewSupplier(String supplierName, String phoneNo, String email, String address) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Save Details");
+
+        DBConnection connect = new DBConnection();
+        Connection connection1 = connect.getConnection();
+
+        String insertSupplier = "insert into suppliers(name, phonenumber, email, address) values(?,?,?,?)";
+
+        try {
+            PreparedStatement preparedStatement = connection1.prepareStatement(insertSupplier);
+            preparedStatement.setString(1, supplierName);
+            preparedStatement.setString(2, phoneNo);
+            preparedStatement.setString(3, email);
+            preparedStatement.setString(4, address);
+
+            int rowsaffected = preparedStatement.executeUpdate();
+
+            if(rowsaffected>0){
+                alert.setAlertType(Alert.AlertType.INFORMATION);
+                alert.setContentText("Details have been saved successfully!");
+                alert.showAndWait();
+                supplierNameTF.clear();
+                phoneNoTF.clear();
+                emailTF.clear();
+                addressTF.clear();
+            } else {
+                alert.setAlertType(Alert.AlertType.ERROR);
+                alert.setContentText("Failed to save details!");
+                alert.showAndWait();
+            }
+            preparedStatement.close();
+            connection1.close();
+        } catch (SQLIntegrityConstraintViolationException e){
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setContentText("Supplier with the same phone number or email already exists!");
+            alert.showAndWait();
+        }catch (SQLException e) {
+            e.printStackTrace();
+            e.getCause();
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setContentText("Failed. Try again later.");
+            alert.showAndWait();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateSupplier(String supplierName, String phoneNo, String email, String address){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Update Supplier Details");
+
+        DBConnection connect = new DBConnection();
+        Connection connection = connect.getConnection();
+
+        String updateSupplier = "update suppliers set name = ?, phonenumber = ?, address = ? where email = ?";
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(updateSupplier);
+            preparedStatement.setString(1, supplierName);
+            preparedStatement.setString(2, phoneNo);
+            preparedStatement.setString(3, address);
+            preparedStatement.setString(4, email);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if(rowsAffected>0){
+                alert.setAlertType(Alert.AlertType.INFORMATION);
+                alert.setContentText("Supplier has been updated successfully!");
+                alert.showAndWait();
+
+                closePage();
+
+                if (viewSuppliersController != null) {
+                    viewSuppliersController.loadSupplierData();
+                } else {
+                    System.out.println("Warning: viewSuppliersController is null. Data will not refresh.");
+                }
+            } else {
+                alert.setAlertType(Alert.AlertType.ERROR);
+                alert.setContentText("Failed to update details!");
+                alert.showAndWait();
+            }
+
+        } catch (SQLException e) {
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setContentText("Failed! Try again later.");
+            alert.showAndWait();
+            e.printStackTrace();
+            e.getCause();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void closePage(){
@@ -84,16 +254,13 @@ public class AddSuppliers {
     }
 
     public void loadImages(){
-        File exitFile = new File("Images/closeBtn.png");
-        Image exitImage = new Image(exitFile.toURI().toString());
+        Image exitImage = new Image(getClass().getResource("/Images/closeBtn.png").toExternalForm());
         closeBtnImage.setImage(exitImage);
 
-        File minimizeFile = new File("Images/minimizeBtn.png");
-        Image minimizeImage = new Image(minimizeFile.toURI().toString());
+        Image minimizeImage = new Image(getClass().getResource("/Images/minimizeBtn.png").toExternalForm());
         minimizeBtnImage.setImage(minimizeImage);
 
-        File maximizeFile = new File("Images/maximizeBtn.png");
-        Image maximizeImage = new Image(maximizeFile.toURI().toString());
+        Image maximizeImage = new Image(getClass().getResource("/Images/maximizeBtn.png").toExternalForm());
         maximizeBtnImage.setImage(maximizeImage);
     }
 }

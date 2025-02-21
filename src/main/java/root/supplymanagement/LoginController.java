@@ -40,8 +40,8 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-        File brandingFile = new File("Images/KIMSAlogo.jpeg");
-        Image brandingImage = new Image(brandingFile.toURI().toString());
+
+        Image brandingImage = new Image(getClass().getResource("/Images/kimsalogo.png").toExternalForm());
         brandingImageView.setImage(brandingImage);
 
         File lockFile = new File("Images/lock.png");
@@ -60,7 +60,7 @@ public class LoginController implements Initializable {
                     invalidMessageLabel.setText("Fields are empty");
                     invalidMessageLabel.setVisible(true);
                 } else {
-                    validateLoginn(new ActionEvent(passwordTextField, null));
+                    validateLogin(new ActionEvent(passwordTextField, null));
                 }
             }
         });
@@ -72,7 +72,7 @@ public class LoginController implements Initializable {
             invalidMessageLabel.setText("Fields are empty");
             invalidMessageLabel.setVisible(true);
         } else {
-            validateLoginn(actionEvent);
+            validateLogin(actionEvent);
         }
     }
 
@@ -80,23 +80,6 @@ public class LoginController implements Initializable {
     protected void onCancelButtonClick() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
-    }
-
-    public void validateLoginn(ActionEvent actionEvent) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("home-view.fxml"));
-            Stage stage = new Stage();
-            Scene scene = new Scene(root, 780, 550);
-            stage.setScene(scene);
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
-
-            Stage currentStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            currentStage.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-            e.getCause().printStackTrace();
-        }
     }
 
     public void validateLogin(ActionEvent event) {

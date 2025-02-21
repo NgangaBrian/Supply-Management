@@ -16,7 +16,7 @@
          <children>
             <ImageView fx:id="brandingImageView" fitHeight="116.0" fitWidth="186.0" layoutX="42.0" layoutY="46.0" pickOnBounds="true" smooth="false">
                <image>
-                  <Image url="@../../../../../Images/KIMSAlogo.jpeg" />
+                  <Image url="@../../Images/KIMSAlogo.jpeg" />
                </image>
             </ImageView>
             <Label layoutX="56.0" layoutY="195.0" text="KIMSA" textFill="#fcf9f9">
@@ -37,7 +37,7 @@
          <children>
             <ImageView fx:id="lockImageView" fitHeight="62.0" fitWidth="69.0" layoutX="158.0" layoutY="38.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../Images/lock.png" />
+                  <Image url="@../../Images/lock.png" />
                </image>
             </ImageView>
             <Label layoutX="35.0" layoutY="159.0" text="Username:" wrapText="true">
