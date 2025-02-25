@@ -78,6 +78,6 @@
             <VBox fx:id="orderItems" prefHeight="365.0" prefWidth="813.0" style="-fx-background-color: FFFAFA;" />
          </content>
       </ScrollPane>
-      <ComboBox layoutX="722.0" layoutY="56.0" prefWidth="150.0" promptText="Last 30 Days" />
+      <ComboBox fx:id="filter" layoutX="722.0" layoutY="56.0" prefWidth="150.0" promptText="Last 30 Days" />
    </children>
 </AnchorPane>
