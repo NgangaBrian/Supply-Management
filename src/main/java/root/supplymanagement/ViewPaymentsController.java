@@ -1,9 +1,12 @@
 package root.supplymanagement;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -13,6 +16,8 @@ import javafx.stage.Window;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class ViewPaymentsController implements Initializable {
@@ -22,11 +27,98 @@ public class ViewPaymentsController implements Initializable {
     private ImageView closeBtnImage, maximizeBtnImage, minimizeBtnImage;
     @FXML
     private VBox paymentItems;
+    @FXML
+    private ComboBox<String> filter;
+
+    private final ObservableList<String> filterItems = FXCollections.observableArrayList("All", "Last 7 days", "Last 30 days", "Last 90 days");
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadImages();
-        loadPaymentData();
+        filter.setItems(filterItems);
+        filter.setValue("All");
+
+        loadPaymentData(null);
+        filter.setOnAction(event -> loadPaymentData(filter.getValue()));
+
+    }
+
+
+
+    private void loadPaymentData(String filterOption) {
+        String query = "SELECT * FROM payments";
+        boolean hasFilter = filterOption != null && !"All".equals(filterOption);
+
+        if (hasFilter) {
+            query += " WHERE createdAt >= NOW() - INTERVAL ? DAY";
+        }
+
+        try (Connection connection = new DBConnection().getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            if (hasFilter) {
+                int days = switch (filterOption) {
+                    case "Last 30 days" -> 30;
+                    case "Last 90 days" -> 90;
+                    default -> 7;
+                };
+                preparedStatement.setInt(1, days);
+            }
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+
+                    int orderId = resultSet.getInt("order_id");
+                    int supplierId = resultSet.getInt("supplier_id");
+                    double paidAmount = resultSet.getDouble("paidAmount");
+                    String paymentsMethod = resultSet.getString("paymentMethod");
+                    String referenceNo = resultSet.getString("referenceNo");
+                    Date datePaid = resultSet.getDate("date");
+                    String additionalNotes = resultSet.getString("additionalNotes");
+
+                    setDetailsToView(orderId, supplierId, paidAmount, paymentsMethod, referenceNo, datePaid, additionalNotes);
+
+
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Ideally, log this error instead of printing
+        }
+    }
+
+    private void setDetailsToView(int orderId, int supplierId, double paidAmount, String paymentsMethod, String referenceNo, Date datePaid, String additionalNotes) {
+
+        String query = "SELECT orderNo, supplier FROM orders WHERE id = ?";
+
+        // todo; use supplier id after changing the table orders
+
+        Connection connection = new DBConnection().getConnection();
+
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, orderId);
+            // todo; set supplierId to prepared statements after the todo above
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+
+                String orderNo = resultSet.getString("orderNo");
+                String supplierName = resultSet.getString("supplier");
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("paymentItem.fxml"));
+
+                Node node = loader.load();
+                PaymentItemController controller = loader.getController();
+                controller.setPaymentData(orderNo, supplierName, paidAmount, paymentsMethod,
+                        referenceNo, datePaid, additionalNotes);
+                paymentItems.getChildren().add(node);
+            }
+        } catch (IOException | SQLException e){
+            e.printStackTrace();
+        }
     }
 
     private void loadImages() {
@@ -40,23 +132,6 @@ public class ViewPaymentsController implements Initializable {
         maximizeBtnImage.setImage(maximizeImage);
     }
 
-    private void loadPaymentData() {
-        Node[] nodes = new Node[10];
-        for (int i = 0; i < nodes.length; i++) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("paymentItem.fxml"));
-                Node node = loader.load();
-
-                // Get controller and set supplier data
-                PaymentItemController controller = loader.getController();
-                controller.setPaymentData("KS001", "Brian Nganga", "20,000", "Cheque", "KQZOTHVG", "07/02/2025", "Remember to pay the rest");
-
-                paymentItems.getChildren().add(node);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
     public void handleCloseBtnClick(javafx.scene.input.MouseEvent mouseEvent) {
         Stage stage = (Stage) closeBtnImage.getScene().getWindow();

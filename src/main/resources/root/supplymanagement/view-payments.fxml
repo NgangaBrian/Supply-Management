@@ -87,7 +87,7 @@
                </rotationAxis></VBox>
          </content>
       </ScrollPane>
-      <ComboBox layoutX="736.0" layoutY="86.0" prefWidth="150.0" promptText="Last 30 Days" />
+      <ComboBox fx:id="filter" layoutX="819.0" layoutY="106.0" prefWidth="150.0" promptText="Last 30 Days" />
       <HBox layoutX="43.0" layoutY="67.0" prefHeight="65.0" prefWidth="456.0">
          <children>
             <Pane prefHeight="89.0" prefWidth="151.0" styleClass="payments-panes">
