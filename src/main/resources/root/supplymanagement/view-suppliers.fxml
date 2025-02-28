@@ -72,7 +72,7 @@
             <VBox fx:id="supplierItems" prefHeight="365.0" prefWidth="813.0" style="-fx-background-color: FFFAFA;" />
          </content>
       </ScrollPane>
-      <Pane layoutX="801.0" layoutY="64.0" prefHeight="46.0" prefWidth="57.0" styleClass="edit-delete-btn" stylesheets="@styles.css">
+      <Pane layoutX="801.0" layoutY="64.0" onMouseClicked="#openAddSuppliersPane" prefHeight="46.0" prefWidth="57.0" styleClass="edit-delete-btn" stylesheets="@styles.css">
          <children>
             <ImageView fx:id="addBtnImage" fitHeight="37.0" fitWidth="50.0" layoutX="10.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
                <image>

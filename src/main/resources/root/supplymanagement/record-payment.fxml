@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="619.0" prefWidth="816.0" style="-fx-background-color: FFFAFA;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.RecordPaymentController">
+<AnchorPane prefHeight="653.0" prefWidth="816.0" style="-fx-background-color: FFFAFA;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.RecordPaymentController">
    <children>
       <Label layoutX="257.0" layoutY="29.0" text="Record a Payment">
          <font>
@@ -41,28 +41,30 @@
       <Pane prefHeight="5.0" prefWidth="816.0" style="-fx-background-color: #0000FF;" />
       <Label layoutX="174.0" layoutY="108.0" text="Select Supplier:" />
       <Label layoutX="174.0" layoutY="156.0" text="Order No:" />
-      <Label layoutX="174.0" layoutY="198.0" text="Paid Amount:" />
-      <Label layoutX="174.0" layoutY="242.0" text="Payment Method:" />
-      <Label layoutX="174.0" layoutY="288.0" text="Cheque No:" />
-      <ComboBox editable="true" layoutX="306.0" layoutY="104.0" prefHeight="26.0" prefWidth="270.0" promptText="Choose Supplier" />
-      <TextField layoutX="306.0" layoutY="194.0" prefHeight="26.0" prefWidth="270.0" />
-      <ComboBox editable="true" layoutX="306.0" layoutY="238.0" prefHeight="26.0" prefWidth="270.0" promptText="Payment Method" visibleRowCount="100" />
-      <TextField layoutX="306.0" layoutY="284.0" prefHeight="26.0" prefWidth="270.0" />
-      <Button layoutX="208.0" layoutY="539.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" style="-fx-background-color: #2565AE;" text="SAVE" textFill="WHITE">
+      <Label layoutX="174.0" layoutY="241.0" text="Paid Amount:" />
+      <Label layoutX="174.0" layoutY="285.0" text="Payment Method:" />
+      <Label layoutX="174.0" layoutY="331.0" text="Reference No:" />
+      <ComboBox fx:id="supplierCombo" layoutX="306.0" layoutY="104.0" prefHeight="26.0" prefWidth="270.0" promptText="Choose Supplier" />
+      <TextField fx:id="paidAmountTF" layoutX="306.0" layoutY="237.0" prefHeight="26.0" prefWidth="270.0" />
+      <ComboBox fx:id="paymentMethodCombo" layoutX="306.0" layoutY="281.0" prefHeight="26.0" prefWidth="270.0" promptText="Payment Method" visibleRowCount="100" />
+      <TextField fx:id="referenceNoTF" layoutX="306.0" layoutY="327.0" prefHeight="26.0" prefWidth="270.0" />
+      <Button fx:id="saveBtn" layoutX="208.0" layoutY="582.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" style="-fx-background-color: #2565AE;" text="SAVE" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="369.0" layoutY="539.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="109.0" style="-fx-background-color: #2565AE;" text="CLEAR" textFill="WHITE">
+      <Button fx:id="clearBtn" layoutX="369.0" layoutY="582.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="109.0" style="-fx-background-color: #2565AE;" text="CLEAR" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Button>
-      <Button layoutX="511.0" layoutY="539.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="95.0" text="CANCEL" />
-      <Label layoutX="174.0" layoutY="338.0" text="Date:" />
-      <DatePicker layoutX="306.0" layoutY="334.0" prefHeight="26.0" prefWidth="270.0" />
-      <ComboBox editable="true" layoutX="306.0" layoutY="152.0" prefHeight="26.0" prefWidth="270.0" promptText="Choose Order No" />
-      <Label layoutX="174.0" layoutY="386.0" text="Additional Notes:" />
-      <TextArea layoutX="308.0" layoutY="378.0" prefHeight="112.0" prefWidth="270.0" />
+      <Button fx:id="cancelBtn" layoutX="511.0" layoutY="582.0" mnemonicParsing="false" onMouseClicked="#handleCloseBtnClick" prefHeight="26.0" prefWidth="95.0" text="CANCEL" />
+      <Label layoutX="174.0" layoutY="381.0" text="Date:" />
+      <DatePicker fx:id="datePicker" layoutX="306.0" layoutY="377.0" prefHeight="26.0" prefWidth="270.0" />
+      <ComboBox fx:id="orderNoCombo" layoutX="306.0" layoutY="152.0" prefHeight="26.0" prefWidth="270.0" promptText="Choose Order No" />
+      <Label layoutX="174.0" layoutY="429.0" text="Additional Notes:" />
+      <TextArea fx:id="additionalNotesTA" layoutX="308.0" layoutY="421.0" prefHeight="112.0" prefWidth="270.0" />
+      <Label layoutX="174.0" layoutY="200.0" text="Balance" />
+      <TextField fx:id="balanceTF" editable="false" layoutX="306.0" layoutY="196.0" prefHeight="26.0" prefWidth="270.0" />
    </children>
 </AnchorPane>

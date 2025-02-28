@@ -45,7 +45,7 @@
       <Label layoutX="175.0" layoutY="369.0" text="Invoice No.:" />
       <Label layoutX="175.0" layoutY="275.0" text="Paid Amount:" />
       <Label layoutX="175.0" layoutY="414.0" text="Payment Method:" />
-      <Label layoutX="175.0" layoutY="465.0" text="Cheque No:" />
+      <Label layoutX="175.0" layoutY="465.0" text="Reference No:" />
       <Label layoutX="175.0" layoutY="325.0" text="Balance: " />
       <Label fx:id="orderNoLabel" layoutX="307.0" layoutY="84.0" text="KOS001" />
       <ComboBox fx:id="supplierComboBox" layoutX="307.0" layoutY="128.0" prefHeight="26.0" prefWidth="270.0" promptText="Choose Supplier" />
