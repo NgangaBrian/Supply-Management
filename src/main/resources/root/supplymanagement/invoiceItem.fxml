@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox fx:id="supplietItemView" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="53.0" prefWidth="769.0" styleClass="supplier-item-view" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.PaymentItemController">
+   <children>
+      <Label fx:id="orderNo" prefHeight="18.0" prefWidth="71.0" text="INV001">
+         <HBox.margin>
+            <Insets left="20.0" />
+         </HBox.margin>
+      </Label>
+      <Label fx:id="supplierName" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="Brian Nganga">
+         <HBox.margin>
+            <Insets left="50.0" />
+         </HBox.margin>
+      </Label>
+      <Label fx:id="paidAmount" layoutX="43.0" layoutY="28.0" prefHeight="18.0" prefWidth="80.0" text="20,000,000">
+         <HBox.margin>
+            <Insets left="80.0" />
+         </HBox.margin>
+      </Label>
+      <Label fx:id="paymentMethod" layoutX="76.0" layoutY="28.0" prefHeight="18.0" prefWidth="90.0" text="10,000,000">
+         <HBox.margin>
+            <Insets left="80.0" />
+         </HBox.margin>
+      </Label>
+      <Label fx:id="paymentCode" layoutX="430.0" layoutY="28.0" prefHeight="18.0" prefWidth="97.0" text="04/03/2025">
+         <HBox.margin>
+            <Insets left="80.0" />
+         </HBox.margin>
+      </Label>
+   </children>
+</HBox>

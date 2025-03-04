@@ -44,8 +44,6 @@ public class ViewPaymentsController implements Initializable {
 
     }
 
-
-
     private void loadPaymentData(String filterOption) {
         String query = "SELECT * FROM payments";
         boolean hasFilter = filterOption != null && !"All".equals(filterOption);
