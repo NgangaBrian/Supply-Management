@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -24,7 +25,13 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import static com.mysql.cj.conf.PropertyKey.logger;
 
 public class HomeController implements Initializable {
 
@@ -35,11 +42,17 @@ public class HomeController implements Initializable {
     private ImageView logoutImage, viewSupplierImage, viewPaymentsImage, viewOrdersImage, overdueInvoiceImage,
             addSupplierImage, recordPaymentImage, recordOrderImage, settingsImage, closeBtnImage, maximizeBtnImage,
             minimizeBtnImage, logoImageView;
+    @FXML
+    private Label paymentsMadeLB, suppliersLB, overdueInvoicesLB, outstandingBalanceLB;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadImages();
+        getNoOfSuppliers();
+        getNoOfOverdueInvoices();
+        getTotalAmountPaid();
+        getTotalBalance();
 
         // Apply fade-in and slide-in animations
         applyFadeInAnimation(overdueInvoicesPane);
@@ -68,6 +81,65 @@ public class HomeController implements Initializable {
         }).start();
     }
 
+    public void getNoOfSuppliers(){
+        String querry = "select count(*) from suppliers";
+
+        try(Connection conn = new DBConnection().getConnection();
+            PreparedStatement preparedStatement = conn.prepareStatement(querry);
+            ResultSet resultSet = preparedStatement.executeQuery()) {
+            if(resultSet.next()){
+                int noOfSuppliers = resultSet.getInt(1);
+                suppliersLB.setText(String.valueOf(noOfSuppliers));
+            }
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void getTotalAmountPaid() {
+        String query = "SELECT SUM(paidAmount) FROM payments";
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                double paidAmount = rs.getDouble(1);
+                paymentsMadeLB.setText(String.valueOf(paidAmount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getTotalBalance() {
+        String query = "SELECT SUM(balance) FROM orders WHERE balance > 0";
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                double totalBalance = rs.getDouble(1);
+                outstandingBalanceLB.setText(String.valueOf(totalBalance));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getNoOfOverdueInvoices(){
+        String query = "select count(*) from orders where dueDate < CURDATE() AND balance > 0";
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                int noOfOverdueInvoices = rs.getInt(1);
+                overdueInvoicesLB.setText(String.valueOf(noOfOverdueInvoices));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void openAddSuppliersPane(javafx.scene.input.MouseEvent mouseEvent){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("add-suppliers.fxml"));
@@ -89,6 +161,20 @@ public class HomeController implements Initializable {
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root, 900, 567));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openInvoicePane(javafx.scene.input.MouseEvent mouseEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("invoices.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 870, 607));
             stage.initStyle(StageStyle.UNDECORATED);
             stage.show();
         } catch (IOException e) {

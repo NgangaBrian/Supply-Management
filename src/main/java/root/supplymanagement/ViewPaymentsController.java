@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -29,6 +30,8 @@ public class ViewPaymentsController implements Initializable {
     private VBox paymentItems;
     @FXML
     private ComboBox<String> filter;
+    @FXML
+    private Label balanceLB, amountPaidLB, pendingPaymentsLB;
 
     private final ObservableList<String> filterItems = FXCollections.observableArrayList("All", "Last 7 days", "Last 30 days", "Last 90 days");
 
@@ -36,12 +39,41 @@ public class ViewPaymentsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadImages();
+        getTotalBalance();
         filter.setItems(filterItems);
         filter.setValue("All");
 
         loadPaymentData(null);
         filter.setOnAction(event -> loadPaymentData(filter.getValue()));
 
+    }
+
+    public void getTotalAmountPaid() {
+        String query = "SELECT SUM(paidAmount) FROM payments";
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                double paidAmount = rs.getDouble(1);
+                amountPaidLB.setText(String.valueOf(paidAmount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getTotalBalance() {
+        String query = "SELECT SUM(balance) FROM orders WHERE balance > 0";
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                double totalBalance = rs.getDouble(1);
+                balanceLB.setText(String.valueOf(totalBalance));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadPaymentData(String filterOption) {

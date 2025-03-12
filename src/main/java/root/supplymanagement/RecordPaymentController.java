@@ -102,6 +102,8 @@ public class RecordPaymentController implements Initializable {
             Date date = Date.valueOf(datePicker.getValue().toString());
             String additionalNotes = additionalNotesTA.getText();
 
+            System.out.println(supplierName + supplierId);
+
             if (paymentMethod.isEmpty() || referenceNo.isEmpty() || date == null) {
                 alert.setAlertType(Alert.AlertType.WARNING);
                 alert.setTitle("Warning");
@@ -117,6 +119,8 @@ public class RecordPaymentController implements Initializable {
                     insertDetails(supplierId, supplierName, orderId, orderNo, paidAmount, paymentMethod, referenceNo, date, additionalNotes, balance);
                 }
 
+            } else {
+                insertDetails(supplierId, supplierName, orderId, orderNo, paidAmount, paymentMethod, referenceNo, date, additionalNotes, balance);
             }
 
 
@@ -173,6 +177,7 @@ public class RecordPaymentController implements Initializable {
             int rowsAffected = ps.executeUpdate();
 
             if (rowsAffected > 0) {
+                System.out.println("Executing insertDetails for Order No: " + order_id);
                 alert.setContentText("Payment details saved successfully");
                 alert.showAndWait();
             } else {
@@ -183,6 +188,9 @@ public class RecordPaymentController implements Initializable {
 
         } catch (SQLException e){
             e.printStackTrace();
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setContentText("Failed to save details");
+            alert.showAndWait();
         }
     }
 

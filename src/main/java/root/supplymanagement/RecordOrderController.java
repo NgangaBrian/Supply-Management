@@ -38,12 +38,33 @@ public class RecordOrderController implements Initializable {
     private ObservableList<String> supplierNames = FXCollections.observableArrayList();
     private ObservableList<String> paymentMethods = FXCollections.observableArrayList();
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadImages();
         theOrderNo();
         loadSupplierNames();
         loadPaymentMethods();
+
+        paidAmountTF.textProperty().addListener((observable, oldValue, newValue) -> {
+            updateBalance();
+        });
+    }
+
+    private void updateBalance() {
+        try {
+            // Check if the input field is empty and set default value to 0.0
+            double paidAmount = paidAmountTF.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(paidAmountTF.getText());
+            double totalAmount = totalAmountTF.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(totalAmountTF.getText());
+            double balance = totalAmount - paidAmount;
+            balanceTF.setText(String.valueOf(balance));
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Invalid input");
+            // Handle invalid inputs gracefully (e.g., non-numeric input)
+            balanceTF.setText(null);
+        }
     }
 
     private void loadSupplierNames() {
@@ -189,7 +210,7 @@ public class RecordOrderController implements Initializable {
         DBConnection connect = new DBConnection();
         Connection connection1 = connect.getConnection();
 
-        String insertSupplier = "insert into orders(orderNo, supplier, itemsSupplied, totalAmount, paidAmount, balance, invoiceNo, paymentMethod, chequeNo, dueDate) values(?,?,?,?,?,?,?,?,?,?)";
+        String insertSupplier = "insert into orders(orderNo, supplier, itemsSupplied, totalAmount, paidAmount, balance, invoiceNo, paymentMethod, referenceNo, dueDate) values(?,?,?,?,?,?,?,?,?,?)";
 
         try {
             PreparedStatement preparedStatement = connection1.prepareStatement(insertSupplier);

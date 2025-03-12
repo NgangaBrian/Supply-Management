@@ -120,12 +120,15 @@ public class LoginController implements Initializable {
                     invalidMessageLabel.setVisible(true);
                     invalidMessageLabel.setStyle("-fx-text-fill: red");
                 }
+
+
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             e.getCause();
         }
+
 
     }
 }

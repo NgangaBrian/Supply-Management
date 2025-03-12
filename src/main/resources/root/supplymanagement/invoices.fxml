@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="607.0" prefWidth="870.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.ViewPaymentsController">
+<AnchorPane prefHeight="607.0" prefWidth="870.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.InvoicesController">
    <children>
       <Pane prefHeight="22.0" prefWidth="870.0">
          <children>
@@ -71,7 +71,7 @@
       </HBox>
       <ScrollPane layoutX="43.0" layoutY="202.0" prefHeight="365.0" prefWidth="788.0">
          <content>
-            <VBox fx:id="paymentItems" prefHeight="365.0" prefWidth="769.0" spacing="1.0" style="-fx-background-color: FFFAFA;">
+            <VBox fx:id="invoiceItemsVBox" prefHeight="365.0" prefWidth="769.0" spacing="1.0" style="-fx-background-color: FFFAFA;">
                <rotationAxis>
                   <Point3D />
                </rotationAxis></VBox>
@@ -82,7 +82,7 @@
          <children>
             <Pane prefHeight="89.0" prefWidth="151.0" styleClass="payments-panes">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="6.0" prefHeight="39.0" prefWidth="140.0" text="50">
+                  <Label fx:id="allInvoicesLB" alignment="CENTER" contentDisplay="CENTER" layoutX="6.0" prefHeight="39.0" prefWidth="140.0" text="50">
                      <font>
                         <Font name="DejaVu Serif Bold" size="20.0" />
                      </font></Label>
@@ -91,7 +91,7 @@
             </Pane>
             <Pane layoutX="10.0" layoutY="10.0" prefHeight="89.0" prefWidth="135.0" styleClass="payments-panes">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="2.0" prefHeight="39.0" prefWidth="131.0" text="458,050">
+                  <Label fx:id="overpaymentsLB" alignment="CENTER" contentDisplay="CENTER" layoutX="2.0" prefHeight="39.0" prefWidth="131.0" text="458,050">
                      <font>
                         <Font name="DejaVu Serif Bold" size="20.0" />
                      </font>
@@ -104,7 +104,7 @@
             </Pane>
             <Pane layoutX="161.0" layoutY="10.0" prefHeight="89.0" prefWidth="137.0" styleClass="payments-panes">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="8.0" prefHeight="39.0" prefWidth="121.0" text="38">
+                  <Label fx:id="overdueInvoicesLB" alignment="CENTER" contentDisplay="CENTER" layoutX="8.0" prefHeight="39.0" prefWidth="121.0" text="38">
                      <font>
                         <Font name="DejaVu Serif Bold" size="20.0" />
                      </font>

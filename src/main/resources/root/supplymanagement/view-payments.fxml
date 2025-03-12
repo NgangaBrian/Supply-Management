@@ -92,7 +92,7 @@
          <children>
             <Pane prefHeight="89.0" prefWidth="151.0" styleClass="payments-panes">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="6.0" prefHeight="39.0" prefWidth="140.0" text="20,000,000">
+                  <Label fx:id="amountPaidLB" alignment="CENTER" contentDisplay="CENTER" layoutX="6.0" prefHeight="39.0" prefWidth="140.0" text="20,000,000">
                      <font>
                         <Font name="DejaVu Serif Bold" size="20.0" />
                      </font></Label>
@@ -101,7 +101,7 @@
             </Pane>
             <Pane layoutX="10.0" layoutY="10.0" prefHeight="89.0" prefWidth="135.0" styleClass="payments-panes">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="2.0" prefHeight="39.0" prefWidth="131.0" text="458,050">
+                  <Label fx:id="balanceLB" alignment="CENTER" contentDisplay="CENTER" layoutX="2.0" prefHeight="39.0" prefWidth="131.0" text="458,050">
                      <font>
                         <Font name="DejaVu Serif Bold" size="20.0" />
                      </font>
@@ -114,7 +114,7 @@
             </Pane>
             <Pane layoutX="161.0" layoutY="10.0" prefHeight="89.0" prefWidth="137.0" styleClass="payments-panes">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="8.0" prefHeight="39.0" prefWidth="121.0" text="38">
+                  <Label fx:id="pendingPaymentsLB" alignment="CENTER" contentDisplay="CENTER" layoutX="8.0" prefHeight="39.0" prefWidth="121.0" text="38">
                      <font>
                         <Font name="DejaVu Serif Bold" size="20.0" />
                      </font>
