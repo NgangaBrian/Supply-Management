@@ -40,22 +40,22 @@
       <Pane layoutX="2.0" layoutY="-1.0" prefHeight="5.0" prefWidth="814.0" style="-fx-background-color: #0000FF;" />
       <Label layoutX="175.0" layoutY="84.0" text="Order No:" />
       <Label layoutX="175.0" layoutY="132.0" text="Choose Supplier:" />
-      <Label layoutX="175.0" layoutY="180.0" text="Items Supplied:" />
-      <Label layoutX="175.0" layoutY="227.0" text="Total Amount:" />
-      <Label layoutX="175.0" layoutY="369.0" text="Invoice No.:" />
-      <Label layoutX="175.0" layoutY="275.0" text="Paid Amount:" />
-      <Label layoutX="175.0" layoutY="414.0" text="Payment Method:" />
-      <Label layoutX="175.0" layoutY="465.0" text="Reference No:" />
-      <Label layoutX="175.0" layoutY="325.0" text="Balance: " />
+      <Label layoutX="175.0" layoutY="503.0" text="Items Supplied:" />
+      <Label layoutX="175.0" layoutY="179.0" text="Total Amount:" />
+      <Label layoutX="175.0" layoutY="321.0" text="Invoice No.:" />
+      <Label layoutX="175.0" layoutY="227.0" text="Paid Amount:" />
+      <Label layoutX="175.0" layoutY="366.0" text="Payment Method:" />
+      <Label layoutX="175.0" layoutY="417.0" text="Reference No:" />
+      <Label layoutX="175.0" layoutY="277.0" text="Balance: " />
       <Label fx:id="orderNoLabel" layoutX="307.0" layoutY="84.0" text="KOS001" />
       <ComboBox fx:id="supplierComboBox" layoutX="307.0" layoutY="128.0" prefHeight="26.0" prefWidth="270.0" promptText="Choose Supplier" />
-      <TextField fx:id="itemsSuppliedTF" layoutX="307.0" layoutY="176.0" prefHeight="26.0" prefWidth="270.0" />
-      <TextField fx:id="totalAmountTF" layoutX="307.0" layoutY="222.0" prefHeight="26.0" prefWidth="270.0" />
-      <TextField fx:id="paidAmountTF" layoutX="307.0" layoutY="271.0" prefHeight="26.0" prefWidth="270.0" />
-      <TextField fx:id="balanceTF" layoutX="307.0" layoutY="321.0" prefHeight="26.0" prefWidth="270.0" />
-      <ComboBox fx:id="paymentMethodsCombo" layoutX="307.0" layoutY="410.0" prefHeight="26.0" prefWidth="270.0" promptText="Payment Method" visibleRowCount="100" />
-      <TextField fx:id="chequeNoTF" layoutX="307.0" layoutY="461.0" prefHeight="26.0" prefWidth="270.0" />
-      <Button fx:id="saveBtn" layoutX="209.0" layoutY="563.0" mnemonicParsing="false" onMouseClicked="#storeOrder" prefHeight="26.0" prefWidth="127.0" style="-fx-background-color: #2565AE;" text="SAVE" textFill="WHITE">
+      <TextField fx:id="itemsSuppliedTF" layoutX="307.0" layoutY="499.0" prefHeight="26.0" prefWidth="270.0" />
+      <TextField fx:id="totalAmountTF" layoutX="307.0" layoutY="174.0" prefHeight="26.0" prefWidth="270.0" />
+      <TextField fx:id="paidAmountTF" layoutX="307.0" layoutY="223.0" prefHeight="26.0" prefWidth="270.0" />
+      <TextField fx:id="balanceTF" layoutX="307.0" layoutY="273.0" prefHeight="26.0" prefWidth="270.0" />
+      <ComboBox fx:id="paymentMethodsCombo" layoutX="307.0" layoutY="362.0" prefHeight="26.0" prefWidth="270.0" promptText="Payment Method" visibleRowCount="100" />
+      <TextField fx:id="chequeNoTF" layoutX="307.0" layoutY="413.0" prefHeight="26.0" prefWidth="270.0" />
+      <Button fx:id="saveBtn" layoutX="209.0" layoutY="563.0" mnemonicParsing="false" onMouseClicked="#storeOrder" prefHeight="26.0" prefWidth="127.0" style="-fx-background-color: #2565AE;" text="NEXT" textFill="WHITE">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
@@ -66,8 +66,8 @@
          </font>
       </Button>
       <Button fx:id="cancelBtn" layoutX="512.0" layoutY="563.0" mnemonicParsing="false" onMouseClicked="#handleCloseBtnClick" prefHeight="26.0" prefWidth="95.0" text="CANCEL" />
-      <Label layoutX="175.0" layoutY="508.0" text="Due Date:" />
-      <TextField fx:id="invoiceNoTF" layoutX="307.0" layoutY="365.0" prefHeight="26.0" prefWidth="270.0" />
-      <DatePicker fx:id="dueDateTF" layoutX="307.0" layoutY="504.0" prefHeight="26.0" prefWidth="270.0" />
+      <Label layoutX="175.0" layoutY="460.0" text="Due Date:" />
+      <TextField fx:id="invoiceNoTF" layoutX="307.0" layoutY="317.0" prefHeight="26.0" prefWidth="270.0" />
+      <DatePicker fx:id="dueDateTF" layoutX="307.0" layoutY="456.0" prefHeight="26.0" prefWidth="270.0" />
    </children>
 </AnchorPane>

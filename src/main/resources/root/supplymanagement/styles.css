@@ -181,3 +181,21 @@
     -fx-scale-y: 1.02;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
 }
+
+.addSubtractQuantity{
+    -fx-background-color: white;
+    -fx-border-radius: 5px;
+}
+.addSubtractQuantity:pressed{
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+.addSubtractQuantity:hover{
+    -fx-background-color: lightgrey;
+    -fx-border-radius: 10px;
+    -fx-border-color: black;
+}
+.scrollPane{
+    -fx-border-radius: 10px;
+}

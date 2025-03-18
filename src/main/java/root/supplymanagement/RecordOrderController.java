@@ -3,11 +3,16 @@ package root.supplymanagement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 import java.net.URL;
@@ -229,9 +234,23 @@ public class RecordOrderController implements Initializable {
             int rowsaffected = preparedStatement.executeUpdate();
 
             if(rowsaffected>0){
-                alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setContentText("Details have been saved successfully!");
-                alert.showAndWait();
+                try {
+                    // Load the new window
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ordered-items.fxml"));
+                    Parent root = fxmlLoader.load();
+
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root, 547, 462));
+                    stage.initStyle(StageStyle.UNDECORATED);
+
+                    // Ensure the new window is on top and focused
+                    stage.setAlwaysOnTop(true);
+                    stage.show();
+                    stage.requestFocus(); // Forces focus on the new stage
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 alert.setAlertType(Alert.AlertType.ERROR);
                 alert.setContentText("Failed to save details!");

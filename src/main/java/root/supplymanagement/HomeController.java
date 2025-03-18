@@ -141,7 +141,7 @@ public class HomeController implements Initializable {
     }
 
     public void openAddSuppliersPane(javafx.scene.input.MouseEvent mouseEvent){
-        try {
+        try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("add-suppliers.fxml"));
             Parent root = fxmlLoader.load();
 
