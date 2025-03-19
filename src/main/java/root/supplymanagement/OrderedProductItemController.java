@@ -44,6 +44,18 @@ public class OrderedProductItemController {
         }
     }
 
+    public String getProductName() {
+        return productName.getText();
+    }
+
+    public int getQuantity() {
+        try {
+            return Integer.parseInt(productQuantity.getText());
+        } catch (NumberFormatException e) {
+            return 0; // Default to 0 if input is invalid
+        }
+    }
+
     public void setOnRemove(Runnable onRemove) {
         this.onRemove = onRemove;
     }
