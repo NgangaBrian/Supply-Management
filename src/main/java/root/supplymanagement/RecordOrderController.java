@@ -33,7 +33,7 @@ public class RecordOrderController implements Initializable {
     @FXML
     private Label orderNoLabel;
     @FXML
-    private TextField itemsSuppliedTF, totalAmountTF, paidAmountTF, balanceTF, invoiceNoTF, chequeNoTF;
+    private TextField totalAmountTF, paidAmountTF, balanceTF, invoiceNoTF, chequeNoTF;
     @FXML
     private ComboBox<String> supplierComboBox = new ComboBox<>();
     @FXML
@@ -178,7 +178,6 @@ public class RecordOrderController implements Initializable {
         String orderNo = orderNoLabel.getText();
         String supplier = (supplierComboBox.getValue() != null) ? supplierComboBox.getValue() : "";
         int supplierId = getSelectedSupplierId();
-        String itemsSupplied = itemsSuppliedTF.getText();
         String totalAmount = totalAmountTF.getText();
         String paidAmount = paidAmountTF.getText();
         String balance = balanceTF.getText();
@@ -192,7 +191,7 @@ public class RecordOrderController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
 
-        if(orderNo.isEmpty() || supplier.isEmpty() || itemsSupplied.isEmpty() || totalAmount.isEmpty() || paidAmount.isEmpty() || balance.isEmpty() ||
+        if(orderNo.isEmpty() || supplier.isEmpty() || totalAmount.isEmpty() || paidAmount.isEmpty() || balance.isEmpty() ||
         invoiceNo.isEmpty() || paymentMethod.isEmpty() || chequeNo.isEmpty() || dueDate == null){
             alert.setAlertType(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -201,10 +200,10 @@ public class RecordOrderController implements Initializable {
         } else {
 
             String confirmationMessage = String.format(
-                    "Order No: %s\nSupplier: %s\nItems Supplied: %s\nTotal Amount: %s\nPaid Amount: %s\n" +
+                    "Order No: %s\nSupplier: %s\nTotal Amount: %s\nPaid Amount: %s\n" +
                             "Balance: %s\nInvoice No: %s\nPayment Method: %s\nCheque No: %s\nDue Date: %s\n\n" +
                             "Are you sure you want to insert this order?",
-                    orderNo, supplier, itemsSupplied, totalAmount, paidAmount,
+                    orderNo, supplier, totalAmount, paidAmount,
                     balance, invoiceNo, paymentMethod, chequeNo, dueDate
             );
 
@@ -214,7 +213,7 @@ public class RecordOrderController implements Initializable {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                int orderId = insertOrderRecord(orderNo, supplier, itemsSupplied, totalAmount, paidAmount,
+                int orderId = insertOrderRecord(orderNo, supplier, totalAmount, paidAmount,
                         balance, invoiceNo, paymentMethod, chequeNo, dueDate);
                 // todo; return orderId
                 updatePayments(supplierId, orderId, paidAmount, paymentMethod, invoiceNo, currentDate);
@@ -267,14 +266,14 @@ public class RecordOrderController implements Initializable {
         }
     }
 
-    public int insertOrderRecord(String orderNo, String supplier, String itemsSupplied, String totalAmount, String paidAmount, String balance, String invoiceNo, String paymentMethod, String chequeNo, LocalDate dueDate){
+    public int insertOrderRecord(String orderNo, String supplier, String totalAmount, String paidAmount, String balance, String invoiceNo, String paymentMethod, String chequeNo, LocalDate dueDate){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Save Details");
 
         DBConnection connect = new DBConnection();
         Connection connection1 = connect.getConnection();
 
-        String insertSupplier = "insert into orders(orderNo, supplier, itemsSupplied, totalAmount, paidAmount, balance, invoiceNo, paymentMethod, referenceNo, dueDate) values(?,?,?,?,?,?,?,?,?,?)";
+        String insertSupplier = "insert into orders(orderNo, supplier, totalAmount, paidAmount, balance, invoiceNo, paymentMethod, referenceNo, dueDate) values(?,?,?,?,?,?,?,?,?)";
         int generatedId = -1; // Variable to store the generated ID
 
 
@@ -282,14 +281,13 @@ public class RecordOrderController implements Initializable {
             PreparedStatement preparedStatement = connection1.prepareStatement(insertSupplier, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, orderNo);
             preparedStatement.setString(2, supplier);
-            preparedStatement.setString(3, itemsSupplied);
-            preparedStatement.setString(4, totalAmount);
-            preparedStatement.setString(5, paidAmount);
-            preparedStatement.setString(6, balance);
-            preparedStatement.setString(7, invoiceNo);
-            preparedStatement.setString(8, paymentMethod);
-            preparedStatement.setString(9, chequeNo);
-            preparedStatement.setString(10, String.valueOf(dueDate));
+            preparedStatement.setString(3, totalAmount);
+            preparedStatement.setString(4, paidAmount);
+            preparedStatement.setString(5, balance);
+            preparedStatement.setString(6, invoiceNo);
+            preparedStatement.setString(7, paymentMethod);
+            preparedStatement.setString(8, chequeNo);
+            preparedStatement.setString(9, String.valueOf(dueDate));
 
 
             int rowsaffected = preparedStatement.executeUpdate();
@@ -352,7 +350,6 @@ public class RecordOrderController implements Initializable {
 
     public void prepareForNextEntry() {
         // Clear all input fields
-        itemsSuppliedTF.clear();
         totalAmountTF.clear();
         paidAmountTF.clear();
         balanceTF.clear();
@@ -360,8 +357,8 @@ public class RecordOrderController implements Initializable {
         chequeNoTF.clear();
 
         // Reset combo boxes
-        supplierComboBox.getSelectionModel().clearSelection();
-        paymentMethodsCombo.getSelectionModel().clearSelection();
+        supplierComboBox.getSelectionModel().select(0);
+        paymentMethodsCombo.getSelectionModel().select(0);
 
         // Reset date picker
         dueDateTF.setValue(null);

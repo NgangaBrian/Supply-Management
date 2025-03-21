@@ -42,8 +42,8 @@ public class AddOrderedItems {
     }
 
     public void saveOrderedProducts() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         if (orderNo == null || orderNo.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
             alert.setContentText("Order No is missing!");
@@ -52,8 +52,6 @@ public class AddOrderedItems {
         }
 
         List<ProductOrderModel> productOrders = new ArrayList<>();
-
-        System.out.println("VBox Children Count: " + vboxContainer.getChildren().size());
 
         // Loop through VBox children and collect product names and quantities
         for (Node node : vboxContainer.getChildren()) {
@@ -70,17 +68,17 @@ public class AddOrderedItems {
                 try {
                     quantity = controller.getQuantity();
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid quantity format for: " + productName);
-                    continue;
+                    alert.setAlertType(Alert.AlertType.ERROR);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Invalid quantity format for: " + productName);
+                    return;
                 }
 
                 if (productName.isEmpty() || quantity <= 0) {
                     System.out.println("Skipping invalid entry: Empty name or invalid quantity.");
                     continue;
                 }
-
                 productOrders.add(new ProductOrderModel(productName, quantity));
-                System.out.println("Added Product: " + productName + " - Quantity: " + quantity);
             }
         }
 
@@ -95,6 +93,8 @@ public class AddOrderedItems {
     public void insertProductsIntoDatabase(List<ProductOrderModel> productOrders) {
         String query = "INSERT INTO ordered_products (orderNo, productName, quantity) VALUES (?, ?, ?)";
 
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
         DBConnection connect = new DBConnection();
         try (Connection connection = connect.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -107,18 +107,25 @@ public class AddOrderedItems {
             }
 
             int[] rowsAffected = preparedStatement.executeBatch();
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText(rowsAffected.length + " products saved successfully!");
-            alert.showAndWait();
+            if (rowsAffected.length > 0) {
 
-            // ✅ Close the window
-            Stage stage = (Stage) vboxContainer.getScene().getWindow();
-            stage.close();
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Ordered products saved successfully!");
+                alert.showAndWait();
+
+                // ✅ Close the window
+                Stage stage = (Stage) vboxContainer.getScene().getWindow();
+                stage.close();
+            } else {
+                alert.setAlertType(Alert.AlertType.ERROR);
+                alert.setHeaderText(null);
+                alert.setContentText("Ordered products could not be saved!");
+                alert.showAndWait();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setAlertType(Alert.AlertType.ERROR);
             alert.setTitle("Database Error");
             alert.setHeaderText(null);
             alert.setContentText("Failed to save products. Please try again.");

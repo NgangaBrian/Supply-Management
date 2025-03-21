@@ -40,6 +40,8 @@ public class ViewPaymentsController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadImages();
         getTotalBalance();
+        getTotalAmountPaid();
+        getTotalPendingInvoices();
         filter.setItems(filterItems);
         filter.setValue("All");
 
@@ -56,6 +58,20 @@ public class ViewPaymentsController implements Initializable {
             if (rs.next()) {
                 double paidAmount = rs.getDouble(1);
                 amountPaidLB.setText(String.valueOf(paidAmount));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getTotalPendingInvoices() {
+        String query = "SELECT COUNT(*) FROM orders WHERE balance > 0";
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                int pendingPayments = rs.getInt(1);
+                pendingPaymentsLB.setText(String.valueOf(pendingPayments));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -146,6 +162,8 @@ public class ViewPaymentsController implements Initializable {
                         referenceNo, datePaid, additionalNotes);
                 paymentItems.getChildren().add(node);
             }
+            preparedStatement.close();
+            connection.close();
         } catch (IOException | SQLException e){
             e.printStackTrace();
         }
