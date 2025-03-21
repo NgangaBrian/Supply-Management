@@ -34,9 +34,6 @@ public class ViewOrderedItemsController {
     public void loadOrderedItemsData(String orderNumber) {
         vBox.getChildren().clear(); // Clear existing items
 
-        System.out.println("OrderNo is: " + orderNo + "\n Order Number is: " + orderNumber);
-
-
         String query = "SELECT productName, quantity FROM ordered_products WHERE orderNo = ?";
 
         try (Connection connection = new DBConnection().getConnection();
@@ -47,7 +44,6 @@ public class ViewOrderedItemsController {
                 while (resultSet.next()) {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("view-ordered-product-item.fxml"));
                     Node node = loader.load();
-                    System.out.println("Opening page");
                     ViewOrderedProductItemController controller = loader.getController();
 
                     controller.setOrderedProductdata(
