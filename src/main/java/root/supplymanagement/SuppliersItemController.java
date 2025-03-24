@@ -41,6 +41,8 @@ public class SuppliersItemController {
     public void initialize(){
         deleteSupplier.setOnMouseClicked(this::handleDeleteSupplier);
         editSupplier.setOnMouseClicked(this::handleEditSupplier);
+
+        supplierItemView.setOnMouseClicked(event -> {handleItemClick();});
     }
 
     public void setSupplierData(String name, String phone, String address, String email) {
@@ -55,6 +57,35 @@ public class SuppliersItemController {
         Image deleteImage = new Image(getClass().getResource("/Images/deleteBtn.png").toExternalForm());
         deleteSupplier.setImage(deleteImage);
 
+    }
+
+    @FXML
+    private void handleItemClick() {
+        System.out.println("HBox clicked! Opening view-ordered-items.fxml...");
+        try {
+            String suppliername = supplierName.getText();
+
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view-supplier-data.fxml"));
+            Parent root = loader.load();
+
+            // Get controller of the new FXML file
+            ViewSupplierDataController controller = loader.getController();
+
+            // Pass data to the new controller
+            controller.loadOrdersData(supplierName.getText());
+            controller.loadOrderNumbersComboBox(supplierName.getText());
+            controller.loadPaymentsDataForSupplier(supplierName.getText());
+
+            // Show new window
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 876, 601));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleDeleteSupplier(MouseEvent event) {
@@ -119,5 +150,7 @@ public class SuppliersItemController {
             return false;
         }
     }
+
+
 
 }
