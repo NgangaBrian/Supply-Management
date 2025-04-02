@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="601.0" prefWidth="876.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.ViewSupplierDataController">
+   <children>
+      <TabPane fx:id="tabPane" layoutX="-2.0" layoutY="25.0" prefHeight="575.0" prefWidth="876.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="ordersTab" text="Orders">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="342.0" prefWidth="740.0">
+                     <children>
+                        <HBox alignment="CENTER_LEFT" layoutX="14.0" layoutY="14.0" prefHeight="46.0" prefWidth="829.0" style="-fx-background-color: FFFAFA;">
+                           <children>
+                              <Label text="Order No.">
+                                 <HBox.margin>
+                                    <Insets left="30.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="10.0" layoutY="24.0" text="Supplier Name">
+                                 <HBox.margin>
+                                    <Insets left="70.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="47.0" layoutY="24.0" text="Total Amount">
+                                 <HBox.margin>
+                                    <Insets left="50.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="141.0" layoutY="24.0" text="Paid Amount">
+                                 <HBox.margin>
+                                    <Insets left="60.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="175.0" layoutY="24.0" text="Balance">
+                                 <HBox.margin>
+                                    <Insets left="70.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="664.0" layoutY="24.0" text="Due Date">
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <ScrollPane layoutX="21.0" layoutY="72.0" prefHeight="416.0" prefWidth="822.0">
+                           <content>
+                              <VBox fx:id="ordersVbox" prefHeight="409.0" prefWidth="818.0" style="-fx-background-color: FFFAFA;" stylesheets="@styles.css">
+                                 <children>
+                                    <Label text="Empty! No orders to display." textFill="#f80303">
+                                       <VBox.margin>
+                                          <Insets left="349.0" top="205.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                 </children></VBox>
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="paymentsTab" text="Payments">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ComboBox fx:id="orderNoComboBox" layoutX="612.0" layoutY="14.0" prefHeight="26.0" prefWidth="221.0" />
+                        <Label layoutX="502.0" layoutY="18.0" text="Filter By: ">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
+                        <HBox alignment="CENTER_LEFT" layoutX="6.0" layoutY="57.0" prefHeight="46.0" prefWidth="870.0" style="-fx-background-color: FFFAFA;">
+                           <children>
+                              <Label text="Order No.">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="10.0" layoutY="24.0" text="Supplier Name">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="47.0" layoutY="24.0" text="Amount Paid">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="141.0" layoutY="24.0" text="Payment Method">
+                                 <HBox.margin>
+                                    <Insets left="40.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="637.0" layoutY="24.0" text="Cheque No:">
+                                 <HBox.margin>
+                                    <Insets left="50.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="175.0" layoutY="24.0" text="Date">
+                                 <HBox.margin>
+                                    <Insets left="70.0" />
+                                 </HBox.margin>
+                              </Label>
+                              <Label layoutX="664.0" layoutY="24.0" text="Note">
+                                 <HBox.margin>
+                                    <Insets left="80.0" />
+                                 </HBox.margin>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <ScrollPane layoutX="12.0" layoutY="122.0" prefHeight="365.0" prefWidth="857.0">
+                           <content>
+                              <VBox fx:id="paymentsVbox" prefHeight="365.0" prefWidth="861.0" spacing="1.0" style="-fx-background-color: FFFAFA;">
+                                 <rotationAxis>
+                                    <Point3D />
+                                 </rotationAxis>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                        <Button layoutX="697.0" layoutY="504.0" mnemonicParsing="false" text="Generate Report" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Pane layoutY="3.0" prefHeight="22.0" prefWidth="876.0">
+         <children>
+            <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="850.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
+               <image>
+                  <Image url="@../../../../../target/classes/Images/closeBtn.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="maximizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="828.0" layoutY="3.0" onMouseClicked="#handleMaximizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
+               <image>
+                  <Image url="@../../Images/maximizeBtn.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="minimizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="806.0" layoutY="3.0" onMouseClicked="#handleMinimizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
+               <image>
+                  <Image url="@../../Images/minimizeBtn.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="367.0" layoutY="1.0" text="View Supplier Data">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

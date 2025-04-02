@@ -37,7 +37,7 @@ public class HomeController implements Initializable {
 
     @FXML
     private Pane overdueInvoicesPane, recordOrderPane, recordPaymentPane, addSupplierPane,
-            viewOrderPane, viewPaymentsPane, viewSuppliersPane, logOutPane;
+            viewOrderPane, viewPaymentsPane, viewSuppliersPane, logOutPane, settingsContainer;
     @FXML
     private ImageView logoutImage, viewSupplierImage, viewPaymentsImage, viewOrdersImage, overdueInvoiceImage,
             addSupplierImage, recordPaymentImage, recordOrderImage, settingsImage, closeBtnImage, maximizeBtnImage,
@@ -138,6 +138,20 @@ public class HomeController implements Initializable {
             e.printStackTrace();
         }
 
+    }
+
+    public void openSettingsPane(javafx.scene.input.MouseEvent mouseEvent){
+        try{
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("settings.fxml"));
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 654, 400));
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void openAddSuppliersPane(javafx.scene.input.MouseEvent mouseEvent){
