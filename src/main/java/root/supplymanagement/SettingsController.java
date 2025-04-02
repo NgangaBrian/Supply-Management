@@ -2,6 +2,8 @@ package root.supplymanagement;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -16,10 +18,19 @@ public class SettingsController {
     private BorderPane borderPane;
     @FXML
     private ImageView maximizeBtnImage, closeBtnImage, minimizeBtnImage;
+    @FXML
+    private Label nameLB;
+
+    private User loggedInUser;
 
     public void initialize() {
         loadImages();
         editProducts(null);
+    }
+
+    public void setUserData(User user) {
+        this.loggedInUser = user;
+        nameLB.setText(user.getFirstname() + " " + user.getLastname());
     }
 
     public void handleCloseBtnClick(javafx.scene.input.MouseEvent mouseEvent) {

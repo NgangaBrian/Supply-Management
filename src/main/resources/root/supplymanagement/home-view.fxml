@@ -14,7 +14,7 @@
       <AnchorPane prefHeight="475.0" prefWidth="781.0" style="-fx-background-color: FFFAFA;" BorderPane.alignment="CENTER">
          <children>
             <Label layoutX="93.0" layoutY="240.0" text="Logged in as: " />
-            <Label layoutX="191.0" layoutY="240.0" text="Brian Nganga" />
+            <Label fx:id="nameOfUser" layoutX="191.0" layoutY="240.0" text="Brian Nganga" />
             <ImageView fx:id="logoImageView" fitHeight="129.0" fitWidth="125.0" layoutX="124.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../../Images/kimsalogo.png" />

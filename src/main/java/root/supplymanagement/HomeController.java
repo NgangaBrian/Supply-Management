@@ -43,7 +43,9 @@ public class HomeController implements Initializable {
             addSupplierImage, recordPaymentImage, recordOrderImage, settingsImage, closeBtnImage, maximizeBtnImage,
             minimizeBtnImage, logoImageView;
     @FXML
-    private Label paymentsMadeLB, suppliersLB, overdueInvoicesLB, outstandingBalanceLB;
+    private Label paymentsMadeLB, suppliersLB, overdueInvoicesLB, outstandingBalanceLB, nameOfUser;
+
+    public User loggedInUser;
 
 
     @Override
@@ -79,6 +81,11 @@ public class HomeController implements Initializable {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    public void setUserData(User user) {
+        this.loggedInUser = user;
+        nameOfUser.setText(user.getFirstname() + " " + user.getLastname());
     }
 
     public void getNoOfSuppliers(){
@@ -144,6 +151,9 @@ public class HomeController implements Initializable {
         try{
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("settings.fxml"));
             Parent root = fxmlLoader.load();
+
+            SettingsController settingsController = fxmlLoader.getController();
+            settingsController.setUserData(loggedInUser);
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root, 654, 400));

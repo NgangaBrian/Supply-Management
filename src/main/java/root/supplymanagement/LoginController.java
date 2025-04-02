@@ -36,11 +36,8 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField passwordTextField;
 
-
-
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle){
-
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         Image brandingImage = new Image(getClass().getResource("/Images/kimsalogo.png").toExternalForm());
         brandingImageView.setImage(brandingImage);
 
@@ -64,8 +61,8 @@ public class LoginController implements Initializable {
                 }
             }
         });
-
     }
+
     @FXML
     public void loginButton(ActionEvent actionEvent) {
         if (usernameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
@@ -83,11 +80,11 @@ public class LoginController implements Initializable {
     }
 
     public void validateLogin(ActionEvent event) {
-
         DBConnection connect = new DBConnection();
         Connection connection1 = connect.getConnection();
 
-        String verifyLogin = "SELECT count(1) from users where username = ? AND password = ?";
+        // Fetching full user data
+        String verifyLogin = "SELECT * FROM users WHERE username = ? AND password = ?";
 
         try {
             PreparedStatement preparedStatement = connection1.prepareStatement(verifyLogin);
@@ -95,40 +92,48 @@ public class LoginController implements Initializable {
             preparedStatement.setString(2, passwordTextField.getText());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                if (resultSet.getInt(1) == 1){
-                    invalidMessageLabel.setText("Logged in successfully");
-                    invalidMessageLabel.setVisible(true);
-                    invalidMessageLabel.setStyle("-fx-text-fill: green");
+            if (resultSet.next()) {
+                // Store user details in a User object
+                User user = new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("firstname"),
+                        resultSet.getString("lastname"),
+                        resultSet.getString("password")
+                );
 
-                    try {
-                        Parent root = FXMLLoader.load(getClass().getResource("home-view.fxml"));
-                        Stage stage = new Stage();
-                        Scene scene = new Scene(root, 780, 550);
-                        stage.setScene(scene);
-                        stage.initStyle(StageStyle.UNDECORATED);
-                        stage.show();
+                invalidMessageLabel.setText("Logged in successfully");
+                invalidMessageLabel.setVisible(true);
+                invalidMessageLabel.setStyle("-fx-text-fill: green");
 
-                        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                        currentStage.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        e.getCause().printStackTrace();
-                    }
-                } else {
-                    invalidMessageLabel.setText("Login failed, try again");
-                    invalidMessageLabel.setVisible(true);
-                    invalidMessageLabel.setStyle("-fx-text-fill: red");
+                try {
+                    // Load next page with user data
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("home-view.fxml"));
+                    Parent root = loader.load();
+
+                    // Pass user data to HomeController
+                    HomeController homeController = loader.getController();
+                    homeController.setUserData(user);
+
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root, 780, 550);
+                    stage.setScene(scene);
+                    stage.initStyle(StageStyle.UNDECORATED);
+                    stage.show();
+
+                    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    currentStage.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-
+            } else {
+                invalidMessageLabel.setText("Login failed, try again");
+                invalidMessageLabel.setVisible(true);
+                invalidMessageLabel.setStyle("-fx-text-fill: red");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            e.getCause();
         }
-
-
     }
 }
