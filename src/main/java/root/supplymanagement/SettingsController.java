@@ -62,6 +62,21 @@ public class SettingsController {
         }
     }
 
+    public void loadPasswordView(String fxmlFile) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            AnchorPane newView = loader.load();
+
+            ChangePasswordController controller = loader.getController();
+            controller.setUserData(loggedInUser);
+            controller.showUser();
+
+            borderPane.setCenter(newView); // Replace the center content with the new view
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void editProducts(javafx.scene.input.MouseEvent mouseEvent) {
         loadView("editProducts.fxml");
     }
@@ -71,7 +86,11 @@ public class SettingsController {
     }
 
     public void changePassword(javafx.scene.input.MouseEvent mouseEvent){
-        loadView("change-password.fxml");
+        loadPasswordView("change-password.fxml");
+    }
+
+    public void generateReport(javafx.scene.input.MouseEvent mouseEvent) {
+        loadView("generate-report.fxml");
     }
 
     private void loadImages() {

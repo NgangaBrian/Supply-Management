@@ -16,6 +16,7 @@ import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.stage.StageStyle;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.File;
 import java.net.URL;
@@ -83,57 +84,66 @@ public class LoginController implements Initializable {
         DBConnection connect = new DBConnection();
         Connection connection1 = connect.getConnection();
 
-        // Fetching full user data
-        String verifyLogin = "SELECT * FROM users WHERE username = ? AND password = ?";
+        String query = "SELECT * FROM users WHERE username = ?";
 
         try {
-            PreparedStatement preparedStatement = connection1.prepareStatement(verifyLogin);
+            PreparedStatement preparedStatement = connection1.prepareStatement(query);
             preparedStatement.setString(1, usernameTextField.getText());
-            preparedStatement.setString(2, passwordTextField.getText());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                // Store user details in a User object
-                User user = new User(
-                        resultSet.getInt("id"),
-                        resultSet.getString("username"),
-                        resultSet.getString("firstname"),
-                        resultSet.getString("lastname"),
-                        resultSet.getString("password")
-                );
+                String storedHashedPassword = resultSet.getString("password");
+                String enteredPassword = passwordTextField.getText();
 
-                invalidMessageLabel.setText("Logged in successfully");
-                invalidMessageLabel.setVisible(true);
-                invalidMessageLabel.setStyle("-fx-text-fill: green");
+                if (BCrypt.checkpw(enteredPassword, storedHashedPassword)) {
+                    User user = new User(
+                            resultSet.getInt("id"),
+                            resultSet.getString("username"),
+                            resultSet.getString("firstname"),
+                            resultSet.getString("lastname"),
+                            storedHashedPassword
+                    );
 
-                try {
-                    // Load next page with user data
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("home-view.fxml"));
-                    Parent root = loader.load();
+                    invalidMessageLabel.setText("Logged in successfully");
+                    invalidMessageLabel.setVisible(true);
+                    invalidMessageLabel.setStyle("-fx-text-fill: green");
 
-                    // Pass user data to HomeController
-                    HomeController homeController = loader.getController();
-                    homeController.setUserData(user);
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("home-view.fxml"));
+                        Parent root = loader.load();
 
-                    Stage stage = new Stage();
-                    Scene scene = new Scene(root, 780, 550);
-                    stage.setScene(scene);
-                    stage.initStyle(StageStyle.UNDECORATED);
-                    stage.show();
+                        HomeController homeController = loader.getController();
+                        homeController.setUserData(user);
 
-                    Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    currentStage.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        Stage stage = new Stage();
+                        Scene scene = new Scene(root, 780, 550);
+                        stage.setScene(scene);
+                        stage.initStyle(StageStyle.UNDECORATED);
+                        stage.show();
+
+                        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                        currentStage.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    invalidMessageLabel.setText("Invalid password");
+                    invalidMessageLabel.setVisible(true);
+                    invalidMessageLabel.setStyle("-fx-text-fill: red");
                 }
             } else {
-                invalidMessageLabel.setText("Login failed, try again");
+                invalidMessageLabel.setText("User not found");
                 invalidMessageLabel.setVisible(true);
                 invalidMessageLabel.setStyle("-fx-text-fill: red");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            invalidMessageLabel.setText("An error occurred. Try again.");
+            invalidMessageLabel.setVisible(true);
+            invalidMessageLabel.setStyle("-fx-text-fill: red");
         }
     }
+
 }
+

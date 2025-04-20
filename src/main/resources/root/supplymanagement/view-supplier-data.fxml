@@ -132,7 +132,7 @@
                               </VBox>
                            </content>
                         </ScrollPane>
-                        <Button layoutX="697.0" layoutY="504.0" mnemonicParsing="false" text="Generate Report" />
+                        <Button fx:id="generateReportBtn" layoutX="697.0" layoutY="504.0" mnemonicParsing="false" onMouseClicked="#generateReport" text="Generate Report" />
                      </children></AnchorPane>
             </content>
           </Tab>

@@ -5,9 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -32,6 +30,16 @@ public class ViewSupplierDataController {
     private Tab ordersTab, paymentsTab;
     @FXML
     private VBox ordersVbox, paymentsVbox;
+    @FXML
+    private Button generateReportBtn;
+
+    public void generateReport(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Generate Report");
+        alert.setHeaderText(null);
+        alert.setContentText("Coming Soon!");
+        alert.showAndWait();
+    }
 
     int supplierId = -1; // Default value if supplier is not found
     Map<Integer, String> orderMap = new HashMap<>();
