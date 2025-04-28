@@ -1,8 +1,6 @@
 package root.supplymanagement;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,6 +20,18 @@ public class HelloApplication extends Application {
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private static void startMySQLServer() {
+        try {
+            String mysqlPath = ".\\mysql\\bin\\mysqld";  // Change this to your MySQL path
+            ProcessBuilder processBuilder = new ProcessBuilder(mysqlPath, "--console");
+            processBuilder.start();
+            System.out.println("MySQL Server started successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Failed to start MySQL Server.");
+        }
     }
 
     // Firebase initialization method
@@ -46,6 +56,7 @@ public class HelloApplication extends Application {
 //    }
 
     public static void main(String[] args) {
+        startMySQLServer();
         launch();
     }
 }

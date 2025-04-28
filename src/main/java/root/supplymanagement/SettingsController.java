@@ -69,7 +69,6 @@ public class SettingsController {
 
             ChangePasswordController controller = loader.getController();
             controller.setUserData(loggedInUser);
-            controller.showUser();
 
             borderPane.setCenter(newView); // Replace the center content with the new view
         } catch (IOException e) {
