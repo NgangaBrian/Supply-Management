@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -80,7 +79,6 @@
 
     <build>
         <plugins>
-            <!-- Compiler Plugin for Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -90,8 +88,6 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-
-            <!-- JAR Plugin (to set the Main-Class in manifest) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -103,13 +99,6 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>
-
-            <!-- Shade Plugin (Creates a standalone JAR with dependencies) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -124,15 +113,6 @@
                             </transformers>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-
-            <!-- Resources Plugin (Ensures images, FXML files, etc., are included in the JAR) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
                     <execution>
                         <phase>process-resources</phase>
                         <goals>
