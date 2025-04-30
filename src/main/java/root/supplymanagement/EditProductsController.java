@@ -61,8 +61,6 @@ public class EditProductsController {
     private List<Product> getProductsFromDatabase() {
         List<Product> products = new ArrayList<>();
 
-        System.out.println("PRODUCTS FROM DATABASE");
-
         String query = "SELECT name FROM products";
         DBConnection dbConnection = new DBConnection();
         Connection connection = dbConnection.getConnection();

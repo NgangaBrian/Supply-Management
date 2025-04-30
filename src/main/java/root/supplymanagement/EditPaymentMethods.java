@@ -74,12 +74,10 @@ public class EditPaymentMethods {
 
                 // Get controller of productItem.fxml and set the product name
                 ItemController controller = loader.getController();
-                System.out.println("Item name: " + product.getName());
                 controller.setItem(product.getName());
 
                 // Add the item to the VBox
                 itemsVbox.getChildren().add(itemNode);
-                System.out.println(product.getName() + " -> VBOX added");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -88,8 +86,6 @@ public class EditPaymentMethods {
 
     private List<Product> getProductsFromDatabase() {
         List<Product> products = new ArrayList<>();
-
-        System.out.println("PRODUCTS FROM DATABASE");
 
         String query = "SELECT name FROM paymentmethods";
         DBConnection dbConnection = new DBConnection();
@@ -102,7 +98,6 @@ public class EditPaymentMethods {
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 products.add(new Product(name));
-                System.out.println(name);
             }
 
             resultSet.close();
