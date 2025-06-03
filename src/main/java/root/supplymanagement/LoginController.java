@@ -139,6 +139,7 @@ public class LoginController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
+            HelloApplication.logErrorToFile(e);
             invalidMessageLabel.setText("An error occurred. Try again.");
             invalidMessageLabel.setVisible(true);
             invalidMessageLabel.setStyle("-fx-text-fill: red");

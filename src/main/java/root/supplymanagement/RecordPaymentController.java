@@ -145,7 +145,7 @@ public class RecordPaymentController implements Initializable {
         );
 
 
-        alert.setHeaderText("Are you sure you want to insert this order?");
+        alert.setHeaderText("Are you sure you want to insert this payment?");
         alert.setContentText(confirmationMessage);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -210,6 +210,9 @@ public class RecordPaymentController implements Initializable {
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Order updated successfully");
+                paidAmountTF.clear();
+                referenceNoTF.clear();
+                balanceTF.clear();
             } else {
                 System.out.println("Failed to save details");
             }

@@ -135,11 +135,6 @@ public class AddOrderedItems {
 
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Order No");
-        alert.setHeaderText(null);
-        alert.setContentText("Order No: " + orderNo);
-        alert.showAndWait();
     }
 
     private void handleComboBoxSelection(javafx.event.ActionEvent actionEvent) {

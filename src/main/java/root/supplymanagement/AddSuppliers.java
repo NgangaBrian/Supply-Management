@@ -148,6 +148,7 @@ public class AddSuppliers {
                 phoneNoTF.clear();
                 emailTF.clear();
                 addressTF.clear();
+                supplierNameTF.requestFocus();
             } else {
                 alert.setAlertType(Alert.AlertType.ERROR);
                 alert.setContentText("Failed to save details!");
