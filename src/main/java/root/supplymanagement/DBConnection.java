@@ -33,7 +33,6 @@ public class DBConnection {
         // Use SSL if required by Aiven (they often require it)
         String dbUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?sslMode=REQUIRED";
 
-
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             databaseLink = DriverManager.getConnection(dbUrl, dbUser, dbPassword);

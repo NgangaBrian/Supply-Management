@@ -7,6 +7,7 @@ import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -47,6 +49,16 @@ public class HomeController implements Initializable {
 
     public User loggedInUser;
 
+    @FXML
+    private StackPane rootPane;
+
+    @FXML
+    private Group scalingGroup;
+
+    private final double BASE_WIDTH = 780;
+    private final double BASE_HEIGHT = 550;
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -65,6 +77,10 @@ public class HomeController implements Initializable {
         applyFadeInAnimation(viewPaymentsPane);
         applyFadeInAnimation(viewSuppliersPane);
         applyFadeInAnimation(logOutPane);
+
+        // Bind width and height to rootPane
+        rootPane.widthProperty().addListener((obs, oldVal, newVal) -> updateScale());
+        rootPane.heightProperty().addListener((obs, oldVal, newVal) -> updateScale());
     }
 
     @FXML
@@ -81,6 +97,14 @@ public class HomeController implements Initializable {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    private void updateScale() {
+        double scaleX = rootPane.getWidth() / BASE_WIDTH;
+        double scaleY = rootPane.getHeight() / BASE_HEIGHT;
+        double scale = Math.min(scaleX, scaleY); // uniform scaling to avoid distortion
+        scalingGroup.setScaleX(scale);
+        scalingGroup.setScaleY(scale);
     }
 
     public void setUserData(User user) {

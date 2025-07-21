@@ -6,6 +6,7 @@ module root.supplymanagement {
     requires mysql.connector.j;
     requires com.google.auth.oauth2;
     requires jbcrypt;
+    requires dynamicreports.core;
 
 
     opens root.supplymanagement to javafx.fxml;

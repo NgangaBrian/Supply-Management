@@ -64,6 +64,12 @@
             <version>8.0.33</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.sourceforge.dynamicreports</groupId>
+            <artifactId>dynamicreports-core</artifactId>
+            <version>6.20.0</version>
+        </dependency>
+
         <!-- Google Auth Library -->
         <dependency>
             <groupId>com.google.auth</groupId>
