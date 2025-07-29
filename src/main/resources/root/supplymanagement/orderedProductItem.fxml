@@ -11,7 +11,7 @@
 
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="350.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.OrderedProductItemController">
    <children>
-      <Label fx:id="productName" alignment="CENTER" text="Chandelier">
+      <Label fx:id="productName" alignment="CENTER" prefHeight="17.0" prefWidth="140.0" text="Chandelier">
          <HBox.margin>
             <Insets left="20.0" />
          </HBox.margin>
@@ -21,10 +21,10 @@
             <Font name="System Bold" size="12.0" />
          </font>
          <HBox.margin>
-            <Insets left="115.0" />
+            <Insets left="15.0" />
          </HBox.margin>
       </Button>
-      <TextField fx:id="productQuantity" alignment="CENTER" prefHeight="26.0" prefWidth="30.0" text="1">
+      <TextField fx:id="productQuantity" alignment="CENTER" prefHeight="26.0" prefWidth="56.0" text="1">
          <HBox.margin>
             <Insets left="10.0" />
          </HBox.margin>

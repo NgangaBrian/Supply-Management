@@ -7,6 +7,7 @@ module root.supplymanagement {
     requires com.google.auth.oauth2;
     requires jbcrypt;
     requires dynamicreports.core;
+    requires jasperreports;
 
 
     opens root.supplymanagement to javafx.fxml;

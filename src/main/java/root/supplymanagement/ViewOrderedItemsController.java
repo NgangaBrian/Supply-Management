@@ -19,13 +19,17 @@ import net.sf.dynamicreports.report.builder.style.Styles;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.constant.HorizontalImageAlignment;
 import net.sf.dynamicreports.report.constant.PageType;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 
 import static net.sf.dynamicreports.report.builder.DynamicReports.report;
 
@@ -78,7 +82,7 @@ public class ViewOrderedItemsController {
 
     @FXML
     public void generateOrderReport() {
-        String orderNo = "KOS001";
+        String orderNo = orderNoLB.getText();
         try(Connection conn = new DBConnection().getConnection()){
             String orderQuery = "SELECT * FROM orders WHERE orderNo = ?";
             PreparedStatement orderStmt = conn.prepareStatement(orderQuery);
@@ -105,9 +109,9 @@ public class ViewOrderedItemsController {
 
             // Company details
             ComponentBuilder<?, ?> companyInfo = Components.verticalList(
-                    Components.text("My Company Ltd").setStyle(Styles.style().bold().setFontSize(14).setHorizontalAlignment(HorizontalAlignment.CENTER)),
-                    Components.text("Email: info@mycompany.com").setStyle(Styles.style().setFontSize(10).setHorizontalAlignment(HorizontalAlignment.CENTER)),
-                    Components.text("1234 Some Street, Nairobi, Kenya").setStyle(Styles.style().setFontSize(10).setHorizontalAlignment(HorizontalAlignment.CENTER))
+                    Components.text("KIMSA Trading Company Ltd").setStyle(Styles.style().bold().setFontSize(14)),
+                    Components.text("Email: kimsaelectricals89@gmail.com").setStyle(Styles.style().setFontSize(10)),
+                    Components.text("P.O BOX 13236, Nakuru, Kenya").setStyle(Styles.style().setFontSize(10))
             );
 
             // Combine logo and company info in a horizontal layout
@@ -117,20 +121,60 @@ public class ViewOrderedItemsController {
                     companyInfo
             ).setStyle(Styles.style().setHorizontalAlignment(HorizontalAlignment.CENTER));
 
-            // Order information section
+            // Define current date
+            String reportDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+// Left column (labels in bold)
+            ComponentBuilder<?, ?> leftColumn = Components.verticalList(
+                    Components.horizontalList(
+                            Components.text("Order No: ").setStyle(Styles.style().bold()),
+                            Components.text(orderNo)
+                    ),
+                    Components.horizontalList(
+                            Components.text("Supplier: ").setStyle(Styles.style().bold()),
+                            Components.text(orderRs.getString("supplier"))
+                    ),
+                    Components.horizontalList(
+                            Components.text("Date Placed: ").setStyle(Styles.style().bold()),
+                            Components.text(String.valueOf(orderRs.getTimestamp("createdAt")))
+                    ),Components.horizontalList(
+                            Components.text("Report Generated On: ").setStyle(Styles.style().bold()),
+                            Components.text(reportDate)
+                    )
+
+            );
+
+// Right column (labels in bold)
+            ComponentBuilder<?, ?> rightColumn = Components.verticalList(
+                    Components.horizontalList(
+                            Components.text("Total Amount: ").setStyle(Styles.style().bold()),
+                            Components.text("KES " + orderRs.getBigDecimal("totalAmount"))
+                    ),
+                    Components.horizontalList(
+                            Components.text("Paid Amount: ").setStyle(Styles.style().bold()),
+                            Components.text("KES " + orderRs.getBigDecimal("paidAmount"))
+                    ),
+                    Components.horizontalList(
+                            Components.text("Balance: ").setStyle(Styles.style().bold()),
+                            Components.text("KES " + orderRs.getBigDecimal("balance"))
+                    ),
+                    Components.horizontalList(
+                            Components.text("Due Date: ").setStyle(Styles.style().bold()),
+                            Components.text(String.valueOf(orderRs.getDate("dueDate")))
+                    )
+            );
+
+// Combine into two-column layout
             ComponentBuilder<?, ?> orderInfo = Components.verticalList(
-                    Components.text("ORDER REPORT").setStyle(Styles.style().bold().setFontSize(18)),
-                    Components.text("Order No: " + orderNo),
-                    Components.text("Supplier: " + orderRs.getString("supplier")),
-                    Components.text("Date Placed: " + orderRs.getTimestamp("createdAt")),
-                    Components.text("Due Date: " + orderRs.getDate("dueDate")),
-                    Components.text("Total Amount: KES " + orderRs.getBigDecimal("totalAmount")),
-                    Components.text("Paid Amount: KES " + orderRs.getBigDecimal("paidAmount")),
-                    Components.text("Balance: KES " + orderRs.getBigDecimal("balance"))
+                    Components.text("ORDER REPORT")
+                            .setStyle(Styles.style().bold().setFontSize(18).setHorizontalAlignment(HorizontalAlignment.CENTER)),
+                    Components.horizontalList()
+                            .add(leftColumn, rightColumn)
+                            .setGap(50) // adjust space between the two columns
             ).setStyle(Styles.style().setTopPadding(10).setFontSize(11));
 
             // Generate report
-            report()
+            JasperPrint jasperPrint = report()
                     .setPageFormat(PageType.A4)
                     .title(
                             header,
@@ -139,14 +183,34 @@ public class ViewOrderedItemsController {
                             Components.verticalGap(15)
                     )
                     .columns(
+                            Columns.reportRowNumberColumn("No.")
+                                    .setFixedColumns(2)
+                                    .setTitleStyle(Styles.style().bold()) // <- Makes the title bold
+                                    .setStyle(Styles.style()
+                                            .setPadding(5)
+                                            .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                                            .setBorder(Styles.pen1Point())),
+
                             Columns.column("Product", "productName", DataTypes.stringType())
-                                    .setStyle(Styles.style().setBorder(Styles.pen1Point())),
+                                    .setTitleStyle(Styles.style().bold()) // <- Makes the title bold
+                                    .setStyle(Styles.style()
+                                            .setPadding(5)
+                                            .setBorder(Styles.pen1Point())),
+
                             Columns.column("Quantity", "quantity", DataTypes.stringType())
-                                    .setStyle(Styles.style().setBorder(Styles.pen1Point()))
+                                    .setTitleStyle(Styles.style().bold()) // <- Makes the title bold
+                                    .setStyle(Styles.style()
+                                            .setPadding(5)
+                                            .setBorder(Styles.pen1Point()))
                     )
                     .highlightDetailEvenRows()
                     .setDataSource(productRs)
-                    .show();
+                    .toJasperPrint();
+
+            // Show with JasperViewer and prevent full app from closing
+            JasperViewer viewer = new JasperViewer(jasperPrint, false); // 'false' prevents app from exiting
+            viewer.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+            viewer.setVisible(true);
         }
         catch (Exception e) {
             throw new RuntimeException(e);

@@ -20,9 +20,8 @@
             <VBox fx:id="vboxContainer" prefHeight="262.0" prefWidth="351.0" style="-fx-background-color: FFFAFA;" />
          </content>
       </ScrollPane>
-      <Button layoutX="128.0" layoutY="390.0" mnemonicParsing="false" onMouseClicked="#saveOrderedProducts" prefWidth="70.0" style="-fx-background-color: #2565AE;" text="Save" textFill="WHITE" />
-      <Button layoutX="222.0" layoutY="390.0" mnemonicParsing="false" prefWidth="70.0" style="-fx-background-color: #2565AE;" text="Clear" textFill="WHITE" />
-      <Button layoutX="320.0" layoutY="390.0" mnemonicParsing="false" onMouseClicked="#handleCloseBtnClick" prefWidth="70.0" text="Exit" />
+      <Button layoutX="278.0" layoutY="386.0" mnemonicParsing="false" onMouseClicked="#saveOrderedProducts" prefWidth="70.0" style="-fx-background-color: #2565AE;" text="Save" textFill="WHITE" />
+      <Button layoutX="372.0" layoutY="386.0" mnemonicParsing="false" prefWidth="70.0" style="-fx-background-color: #2565AE;" text="Clear" textFill="WHITE" />
       <Pane layoutX="1.0" layoutY="3.0" prefHeight="22.0" prefWidth="547.0">
          <children>
             <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="521.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
