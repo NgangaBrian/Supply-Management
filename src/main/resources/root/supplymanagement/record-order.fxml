@@ -48,7 +48,7 @@
       <Label layoutX="175.0" layoutY="277.0" text="Balance: " />
       <Label fx:id="orderNoLabel" layoutX="307.0" layoutY="84.0" text="KOS001" />
       <ComboBox fx:id="supplierComboBox" layoutX="307.0" layoutY="128.0" prefHeight="26.0" prefWidth="270.0" promptText="Choose Supplier" />
-      <TextField fx:id="totalAmountTF" layoutX="307.0" layoutY="174.0" prefHeight="26.0" prefWidth="270.0" />
+      <TextField fx:id="totalAmountTF" layoutX="307.0" layoutY="174.0" prefHeight="26.0" prefWidth="135.0" />
       <TextField fx:id="paidAmountTF" layoutX="307.0" layoutY="223.0" prefHeight="26.0" prefWidth="270.0" />
       <TextField fx:id="balanceTF" layoutX="307.0" layoutY="273.0" prefHeight="26.0" prefWidth="270.0" />
       <ComboBox fx:id="paymentMethodsCombo" layoutX="307.0" layoutY="362.0" prefHeight="26.0" prefWidth="270.0" promptText="Payment Method" visibleRowCount="100" />
@@ -67,5 +67,6 @@
       <Label layoutX="175.0" layoutY="460.0" text="Due Date:" />
       <TextField fx:id="invoiceNoTF" layoutX="307.0" layoutY="317.0" prefHeight="26.0" prefWidth="270.0" />
       <DatePicker fx:id="dueDateTF" layoutX="307.0" layoutY="456.0" prefHeight="26.0" prefWidth="270.0" />
+      <ComboBox fx:id="currencyComboBox" layoutX="452.0" layoutY="175.0" prefWidth="125.0" promptText="Currency" />
    </children>
 </AnchorPane>

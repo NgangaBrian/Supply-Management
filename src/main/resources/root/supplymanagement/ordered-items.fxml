@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="462.0" prefWidth="547.0" style="-fx-background-color: FFFAFA;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.AddOrderedItems">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="465.0" prefWidth="550.0" style="-fx-background-color: FFFAFA; -fx-border-color: #000000; -fx-border-width: 1;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.AddOrderedItems">
    <children>
       <Label layoutX="75.0" layoutY="56.0" prefHeight="17.0" prefWidth="102.0" text="Item Name/No. :" />
       <ScrollPane layoutX="53.0" layoutY="142.0" prefHeight="258.0" prefWidth="453.0" styleClass="scrollPane">

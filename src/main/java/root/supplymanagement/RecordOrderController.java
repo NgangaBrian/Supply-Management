@@ -39,11 +39,14 @@ public class RecordOrderController implements Initializable {
     @FXML
     private ComboBox<String> paymentMethodsCombo = new ComboBox<>();
     @FXML
+    private ComboBox<String> currencyComboBox = new ComboBox<>();
+    @FXML
     private DatePicker dueDateTF;
 
 
     private ObservableList<String> supplierNames = FXCollections.observableArrayList();
     private ObservableList<String> paymentMethods = FXCollections.observableArrayList();
+    private ObservableList<String> currencies = FXCollections.observableArrayList();
 
 
     @Override
@@ -51,6 +54,7 @@ public class RecordOrderController implements Initializable {
         loadImages();
         theOrderNo();
         loadSupplierNames();
+        loadCurrency();
         loadPaymentMethods();
 
         paidAmountTF.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -124,6 +128,23 @@ public class RecordOrderController implements Initializable {
         }
     }
 
+    private void loadCurrency() {
+        String querry = "select code from currency";
+
+        DBConnection connect = new DBConnection();
+        try(Connection connection = connect.getConnection();
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(querry);){
+            while (resultSet.next()) {
+                currencies.add(resultSet.getString("code"));
+            }
+            currencyComboBox.setItems(currencies);
+
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     private static String getHighestOrderNo(Connection conn) throws SQLException {
         String sql = "SELECT orderNo FROM orders ORDER BY orderNo DESC LIMIT 1";
 
@@ -179,6 +200,7 @@ public class RecordOrderController implements Initializable {
         String supplier = (supplierComboBox.getValue() != null) ? supplierComboBox.getValue() : "";
         int supplierId = getSelectedSupplierId();
         String totalAmount = totalAmountTF.getText();
+        String currency = (currencyComboBox.getValue() != null) ? currencyComboBox.getValue() : "";
         String paidAmount = paidAmountTF.getText();
         String balance = balanceTF.getText();
         String invoiceNo = invoiceNoTF.getText();
@@ -191,7 +213,7 @@ public class RecordOrderController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
 
-        if(orderNo.isEmpty() || supplier.isEmpty() || totalAmount.isEmpty() || paidAmount.isEmpty() || balance.isEmpty() ||
+        if(orderNo.isEmpty() || supplier.isEmpty() || totalAmount.isEmpty() || currency.isEmpty() || paidAmount.isEmpty() || balance.isEmpty() ||
         invoiceNo.isEmpty() || paymentMethod.isEmpty() || chequeNo.isEmpty() || dueDate == null){
             alert.setAlertType(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
@@ -200,11 +222,14 @@ public class RecordOrderController implements Initializable {
         } else {
 
             String confirmationMessage = String.format(
-                    "Order No: %s\nSupplier: %s\nTotal Amount: %s\nPaid Amount: %s\n" +
-                            "Balance: %s\nInvoice No: %s\nPayment Method: %s\nCheque No: %s\nDue Date: %s\n\n" +
+                    "Order No: %s\nSupplier: %s\nTotal Amount: %s %s\nPaid Amount: %s %s\n" +
+                            "Balance: %s %s\nInvoice No: %s\nPayment Method: %s\nCheque No: %s\nDue Date: %s\n\n" +
                             "Are you sure you want to insert this order?",
-                    orderNo, supplier, totalAmount, paidAmount,
-                    balance, invoiceNo, paymentMethod, chequeNo, dueDate
+                    orderNo, supplier,
+                    currency, totalAmount,
+                    currency, paidAmount,
+                    currency, balance,
+                    invoiceNo, paymentMethod, chequeNo, dueDate
             );
 
 
@@ -213,7 +238,7 @@ public class RecordOrderController implements Initializable {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                int orderId = insertOrderRecord(orderNo, supplier, totalAmount, paidAmount,
+                int orderId = insertOrderRecord(orderNo, supplier, totalAmount, paidAmount, currency,
                         balance, invoiceNo, paymentMethod, chequeNo, dueDate);
                 // todo; return orderId
                 updatePayments(supplierId, orderId, paidAmount, paymentMethod, invoiceNo, currentDate);
@@ -266,14 +291,14 @@ public class RecordOrderController implements Initializable {
         }
     }
 
-    public int insertOrderRecord(String orderNo, String supplier, String totalAmount, String paidAmount, String balance, String invoiceNo, String paymentMethod, String chequeNo, LocalDate dueDate){
+    public int insertOrderRecord(String orderNo, String supplier, String totalAmount, String paidAmount, String currency, String balance, String invoiceNo, String paymentMethod, String chequeNo, LocalDate dueDate){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Save Details");
 
         DBConnection connect = new DBConnection();
         Connection connection1 = connect.getConnection();
 
-        String insertSupplier = "insert into orders(orderNo, supplier, totalAmount, paidAmount, balance, invoiceNo, paymentMethod, referenceNo, dueDate) values(?,?,?,?,?,?,?,?,?)";
+        String insertSupplier = "insert into orders(orderNo, supplier, totalAmount, paidAmount, currency, balance, invoiceNo, paymentMethod, referenceNo, dueDate) values(?,?,?,?,?,?,?,?,?,?)";
         int generatedId = -1; // Variable to store the generated ID
 
 
@@ -283,11 +308,12 @@ public class RecordOrderController implements Initializable {
             preparedStatement.setString(2, supplier);
             preparedStatement.setString(3, totalAmount);
             preparedStatement.setString(4, paidAmount);
-            preparedStatement.setString(5, balance);
-            preparedStatement.setString(6, invoiceNo);
-            preparedStatement.setString(7, paymentMethod);
-            preparedStatement.setString(8, chequeNo);
-            preparedStatement.setString(9, String.valueOf(dueDate));
+            preparedStatement.setString(5, currency);
+            preparedStatement.setString(6, balance);
+            preparedStatement.setString(7, invoiceNo);
+            preparedStatement.setString(8, paymentMethod);
+            preparedStatement.setString(9, chequeNo);
+            preparedStatement.setString(10, String.valueOf(dueDate));
 
 
             int rowsaffected = preparedStatement.executeUpdate();
@@ -309,7 +335,7 @@ public class RecordOrderController implements Initializable {
 
 
                     Stage stage = new Stage();
-                    stage.setScene(new Scene(root, 547, 462));
+                    stage.setScene(new Scene(root, 550, 465));
                     stage.initStyle(StageStyle.UNDECORATED);
 
                     AddOrderedItems controller = fxmlLoader.getController();

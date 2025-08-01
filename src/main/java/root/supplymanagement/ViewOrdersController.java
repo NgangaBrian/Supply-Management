@@ -75,6 +75,7 @@ public class ViewOrdersController implements Initializable {
                             resultSet.getString("supplier"),
                             resultSet.getDouble("totalAmount"),
                             resultSet.getDouble("paidAmount"),
+                            resultSet.getString("currency"),
                             resultSet.getDouble("balance"),
                             LocalDate.from(resultSet.getTimestamp("createdAt").toLocalDateTime())
                     );

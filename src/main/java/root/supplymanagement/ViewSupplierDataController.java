@@ -1,7 +1,5 @@
 package root.supplymanagement;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -245,6 +243,7 @@ public class ViewSupplierDataController {
                             resultSet.getString("supplier"),
                             resultSet.getDouble("totalAmount"),
                             resultSet.getDouble("paidAmount"),
+                            resultSet.getString("currency"),
                             resultSet.getDouble("balance"),
                             LocalDate.from(resultSet.getTimestamp("createdAt").toLocalDateTime())
                     );

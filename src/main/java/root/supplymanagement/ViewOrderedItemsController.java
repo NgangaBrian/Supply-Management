@@ -1,13 +1,19 @@
 package root.supplymanagement;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.sf.dynamicreports.report.builder.column.Columns;
@@ -21,7 +27,6 @@ import net.sf.dynamicreports.report.constant.HorizontalImageAlignment;
 import net.sf.dynamicreports.report.constant.PageType;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
-import net.sf.dynamicreports.report.definition.ReportParameters;
 
 
 import java.io.IOException;
@@ -30,7 +35,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 import static net.sf.dynamicreports.report.builder.DynamicReports.report;
@@ -44,10 +48,16 @@ public class ViewOrderedItemsController {
     private VBox vBox;
     @FXML
     private Button generateOrderReport;
+    @FXML
+    private AnchorPane rootAnchorPane;
+
+    private StackPane rootOverlay;
 
 
-    public String orderNo, supplierName, duedate;
-    public double paidAmount, balance, totalAmount;
+    public String orderNo, supplierName, duedate, currency;
+    public String paidAmount;
+    public String balance;
+    public String totalAmount;
 
     public void initialize() {
         loadImages();
@@ -82,8 +92,39 @@ public class ViewOrderedItemsController {
         }
     }
 
+
+
     @FXML
     public void generateOrderReport() {
+        showLoadingOverlay();
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                generateOrderReportLogic();
+                return null;
+            }
+            @Override
+            protected void succeeded() {
+                hideLoadingOverlay();
+            }
+
+            @Override
+            protected void failed() {
+                hideLoadingOverlay();
+                getException().printStackTrace();
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+
+    }
+
+
+
+    public void generateOrderReportLogic() {
         String orderNo = orderNoLB.getText();
         try(Connection conn = new DBConnection().getConnection()){
             String orderQuery = "SELECT * FROM orders WHERE orderNo = ?";
@@ -169,15 +210,15 @@ public class ViewOrderedItemsController {
             ComponentBuilder<?, ?> rightColumn = Components.verticalList(
                     Components.horizontalList(
                             Components.text("Total Amount: ").setStyle(Styles.style().bold()),
-                            Components.text("KES " + orderRs.getBigDecimal("totalAmount"))
+                            Components.text(orderRs.getString("currency") + " " + orderRs.getBigDecimal("totalAmount"))
                     ),
                     Components.horizontalList(
                             Components.text("Paid Amount: ").setStyle(Styles.style().bold()),
-                            Components.text("KES " + orderRs.getBigDecimal("paidAmount"))
+                            Components.text(orderRs.getString("currency") + " " + orderRs.getBigDecimal("paidAmount"))
                     ),
                     Components.horizontalList(
                             Components.text("Balance: ").setStyle(Styles.style().bold()),
-                            Components.text("KES " + orderRs.getBigDecimal("balance"))
+                            Components.text(orderRs.getString("currency") + " " + orderRs.getBigDecimal("balance"))
                     ),
                     Components.horizontalList(
                             Components.text("Due Date: ").setStyle(Styles.style().bold()),
@@ -241,7 +282,7 @@ public class ViewOrderedItemsController {
                                     Components.text(""), // Placeholder for Product
                                     Components.text(""), // Placeholder for Quantity
                                     Components.text("Total:").setStyle(Styles.style().bold()),
-                                    Components.text("KES " + String.format("%,.2f", totalAmount)).setStyle(Styles.style().bold())
+                                    Components.text(orderRs.getString("currency") + " " + String.format("%,.2f", totalAmount)).setStyle(Styles.style().bold())
                             )
                     )
                     .highlightDetailEvenRows()
@@ -255,6 +296,34 @@ public class ViewOrderedItemsController {
         }
         catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void showLoadingOverlay() {
+        ProgressIndicator spinner = new ProgressIndicator();
+        Label label = new Label("Generating Report... Please wait...");
+        label.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+
+        VBox overlayBox = new VBox(10, spinner, label);
+        overlayBox.setAlignment(Pos.CENTER);
+        overlayBox.setStyle("-fx-padding: 30px;");
+
+        rootOverlay = new StackPane(overlayBox);
+        rootOverlay.setStyle("-fx-background-color: rgba(0,0,0,0.5);");
+        rootOverlay.setAlignment(Pos.CENTER);
+
+        // Anchor to fill the parent AnchorPane
+        AnchorPane.setTopAnchor(rootOverlay, 150.0);
+        AnchorPane.setBottomAnchor(rootOverlay, 150.0);
+        AnchorPane.setLeftAnchor(rootOverlay, 150.0);
+        AnchorPane.setRightAnchor(rootOverlay, 150.0);
+
+        Platform.runLater(() -> rootAnchorPane.getChildren().add(rootOverlay));
+    }
+
+    private void hideLoadingOverlay(){
+        if (rootOverlay != null) {
+            Platform.runLater(() -> rootAnchorPane.getChildren().remove(rootOverlay));
         }
     }
 
@@ -283,7 +352,7 @@ public class ViewOrderedItemsController {
         maximizeBtnImage.setImage(new Image(getClass().getResource("/Images/maximizeBtn.png").toExternalForm()));
     }
 
-    public void setOrderDetails(String orderNo, String supplierName, double paidAmount, double balance, double totalAmount,String duedate) {
+    public void setOrderDetails(String orderNo, String supplierName, String paidAmount, String balance, String totalAmount,String duedate) {
         this.orderNo = orderNo;
         this.supplierName = supplierName;
         this.paidAmount = paidAmount;

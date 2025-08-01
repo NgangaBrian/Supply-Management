@@ -20,12 +20,12 @@ public class OrdersItemController {
     private HBox supplietItemView;
 
     public void setOrderData(String orderno, String suppliername, Double totalamount, Double paidamount,
-                                Double balamount, LocalDate duedate) {
+                             String currency, Double balamount, LocalDate duedate) {
         orderNo.setText(orderno);
         supplierName.setText(suppliername);
-        totalAmount.setText(totalamount.toString());
-        paidAmount.setText(paidamount.toString());
-        balAmount.setText(balamount.toString());
+        totalAmount.setText(currency +" " + totalamount.toString());
+        paidAmount.setText(currency +" " + paidamount.toString());
+        balAmount.setText(currency +" " + balamount.toString());
         dueDate.setText(duedate.toString());
 
         // Attach click event to HBox
@@ -50,9 +50,9 @@ public class OrdersItemController {
         try {
             String orderNumber = orderNo.getText();
             String suppliername = supplierName.getText();
-            double totalamount = Double.parseDouble(totalAmount.getText());
-            double paidamount = Double.parseDouble(paidAmount.getText());
-            double balamount = Double.parseDouble(balAmount.getText());
+            String totalamount = totalAmount.getText();
+            String paidamount = paidAmount.getText();
+            String balamount = balAmount.getText();
             String duedate = dueDate.getText();
 
 
@@ -63,12 +63,12 @@ public class OrdersItemController {
             ViewOrderedItemsController controller = loader.getController();
 
             // Pass data to the new controller
-            controller.setOrderDetails(orderNumber, suppliername, balamount, paidamount, totalamount, duedate);
+            controller.setOrderDetails(orderNumber, suppliername, paidamount, balamount, totalamount, duedate);
             controller.loadOrderedItemsData(orderNumber);
 
             // Show new window
             Stage stage = new Stage();
-            stage.setScene(new Scene(root, 600, 485));
+            stage.setScene(new Scene(root, 600, 515));
             stage.initStyle(StageStyle.UNDECORATED);
             stage.show();
 
