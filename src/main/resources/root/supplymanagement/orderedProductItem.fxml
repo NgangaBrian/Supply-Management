@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="350.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.OrderedProductItemController">
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="38.0" prefWidth="435.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.OrderedProductItemController">
    <children>
       <Label fx:id="productName" alignment="CENTER" prefHeight="17.0" prefWidth="140.0" text="Chandelier">
          <HBox.margin>
@@ -37,6 +37,11 @@
             <Insets left="10.0" />
          </HBox.margin>
       </Button>
+      <Label fx:id="itemAmount" text="1000000">
+         <HBox.margin>
+            <Insets left="20.0" />
+         </HBox.margin>
+      </Label>
       <ImageView fx:id="removeProduct" fitHeight="37.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" styleClass="edit-delete-btn">
          <image>
             <Image url="@../../Images/deleteBtn.png" />

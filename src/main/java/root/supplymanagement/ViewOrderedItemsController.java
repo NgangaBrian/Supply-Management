@@ -21,6 +21,8 @@ import net.sf.dynamicreports.report.constant.HorizontalImageAlignment;
 import net.sf.dynamicreports.report.constant.PageType;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
+import net.sf.dynamicreports.report.definition.ReportParameters;
+
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -29,7 +31,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.*;
 
 import static net.sf.dynamicreports.report.builder.DynamicReports.report;
 
@@ -97,10 +99,29 @@ public class ViewOrderedItemsController {
                 return;
             }
 
-            String productQuery = "SELECT productName, quantity FROM ordered_products WHERE orderNo = ?";
+            String productQuery = "SELECT productName, quantity, unit_price, (quantity * unit_price) AS amount FROM ordered_products WHERE orderNo = ?";
             PreparedStatement productStmt = conn.prepareStatement(productQuery);
             productStmt.setString(1, orderNo);
             ResultSet productRs = productStmt.executeQuery();
+
+            List<Map<String, Object>> data = new ArrayList<>();
+            double totalAmount = 0;
+
+            while (productRs.next()) {
+                String productName = productRs.getString("productName");
+                int quantity = productRs.getInt("quantity");
+                double unitPrice = productRs.getDouble("unit_price");
+                double amount = quantity * unitPrice;
+
+                Map<String, Object> row = new HashMap<>();
+                row.put("productName", productName);
+                row.put("quantity", quantity);
+                row.put("unit_price", unitPrice);
+                row.put("amount", amount);
+                data.add(row);
+
+                totalAmount += amount;
+            }
 
             // Load logo image (make sure path is correct!)
             ImageBuilder logo = Components.image("src/main/resources/Images/kimsalogo.png")
@@ -197,14 +218,34 @@ public class ViewOrderedItemsController {
                                             .setPadding(5)
                                             .setBorder(Styles.pen1Point())),
 
-                            Columns.column("Quantity", "quantity", DataTypes.stringType())
+                            Columns.column("Quantity", "quantity", DataTypes.integerType())
                                     .setTitleStyle(Styles.style().bold()) // <- Makes the title bold
+                                    .setStyle(Styles.style()
+                                            .setPadding(5)
+                                            .setBorder(Styles.pen1Point())),
+                            Columns.column("Unit Price", "unit_price", DataTypes.doubleType())
+                                    .setTitleStyle(Styles.style().bold())
+                                    .setStyle(Styles.style()
+                                            .setPadding(5)
+                                            .setBorder(Styles.pen1Point())),
+
+                            Columns.column("Amount", "amount", DataTypes.doubleType())
+                                    .setTitleStyle(Styles.style().bold())
                                     .setStyle(Styles.style()
                                             .setPadding(5)
                                             .setBorder(Styles.pen1Point()))
                     )
+                    .summary(
+                            Components.horizontalList(
+                                    Components.text(""), // Placeholder for No.
+                                    Components.text(""), // Placeholder for Product
+                                    Components.text(""), // Placeholder for Quantity
+                                    Components.text("Total:").setStyle(Styles.style().bold()),
+                                    Components.text("KES " + String.format("%,.2f", totalAmount)).setStyle(Styles.style().bold())
+                            )
+                    )
                     .highlightDetailEvenRows()
-                    .setDataSource(productRs)
+                    .setDataSource(data)
                     .toJasperPrint();
 
             // Show with JasperViewer and prevent full app from closing

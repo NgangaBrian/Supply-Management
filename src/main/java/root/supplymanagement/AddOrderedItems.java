@@ -6,10 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -27,7 +24,7 @@ public class AddOrderedItems {
     @FXML
     private ImageView closeBtnImage, minimizeBtnImage, maximizeBtnImage;
     @FXML
-    private ComboBox<String> productsComboBox;
+    private TextField itemNameId, unitPrice;
     @FXML
     private VBox vboxContainer;
 
@@ -36,9 +33,15 @@ public class AddOrderedItems {
 
 
     public void initialize() {
-        loadProductsComboBox();
-
-        productsComboBox.setOnAction(this::handleComboBoxSelection);
+        unitPrice.setOnAction(event -> {
+            String itemName = itemNameId.getText();
+            Double amount = Double.valueOf(unitPrice.getText());
+            if (!itemName.trim().isEmpty()) {
+                addProductToList(itemName, amount);
+                itemNameId.clear();
+                unitPrice.clear();
+            }
+        });
     }
 
     public void saveOrderedProducts() {
@@ -67,6 +70,7 @@ public class AddOrderedItems {
 
                 try {
                     quantity = controller.getQuantity();
+
                 } catch (NumberFormatException e) {
                     alert.setAlertType(Alert.AlertType.ERROR);
                     alert.setHeaderText(null);
@@ -78,7 +82,8 @@ public class AddOrderedItems {
                     System.out.println("Skipping invalid entry: Empty name or invalid quantity.");
                     continue;
                 }
-                productOrders.add(new ProductOrderModel(productName, quantity));
+                double unitPrices = controller.getUnitPrice();
+                productOrders.add(new ProductOrderModel(productName, quantity, unitPrices));
             }
         }
 
@@ -91,7 +96,7 @@ public class AddOrderedItems {
     }
 
     public void insertProductsIntoDatabase(List<ProductOrderModel> productOrders) {
-        String query = "INSERT INTO ordered_products (orderNo, productName, quantity) VALUES (?, ?, ?)";
+        String query = "INSERT INTO ordered_products (orderNo, productName, quantity, unit_price, amount) VALUES (?, ?, ?, ?, ?)";
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
@@ -103,6 +108,8 @@ public class AddOrderedItems {
                 preparedStatement.setString(1, orderNo);
                 preparedStatement.setString(2, product.getProductName());
                 preparedStatement.setInt(3, product.getQuantity());
+                preparedStatement.setDouble(4, product.getUnitPrice());
+                preparedStatement.setDouble(5, product.getAmount());
                 preparedStatement.addBatch();
             }
 
@@ -137,19 +144,12 @@ public class AddOrderedItems {
         this.orderNo = orderNo;
     }
 
-    private void handleComboBoxSelection(javafx.event.ActionEvent actionEvent) {
-
-        String selectedProduct = productsComboBox.getValue();
-        if (selectedProduct != null) {
-            addProductToList(selectedProduct);
-        }
-    }
-
-    private void addProductToList(String productName) {
+    private void addProductToList(String productName, Double amount) {
         // Check if the product is already in the VBox
         for (Node node : vboxContainer.getChildren()) {
             if (node instanceof HBox) {
                 Label label = (Label) node.lookup("#productName");
+                Label label2 = (Label) node.lookup("#itemAmount");
                 if (label != null && label.getText().equals(productName)) {
                     System.out.println("Product already added: " + productName);
                     return; // Exit method without adding a duplicate
@@ -163,7 +163,7 @@ public class AddOrderedItems {
             Parent hboxNode = loader.load();
 
             OrderedProductItemController controller = loader.getController();
-            controller.setProductName(productName);
+            controller.setProductName(productName, amount);
 
             // ✅ Store the controller in the HBox (so we can retrieve it later)
             hboxNode.setUserData(controller);
@@ -182,22 +182,22 @@ public class AddOrderedItems {
         vboxContainer.getChildren().remove(productHBox);
     }
 
-    private void loadProductsComboBox() {
-        String querry = "select name from products";
-
-        DBConnection connect = new DBConnection();
-        try(Connection connection = connect.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(querry);){
-            while (resultSet.next()) {
-                itemNames.add(resultSet.getString("name"));
-            }
-            productsComboBox.setItems(itemNames);
-
-        } catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
+//    private void loadProductsComboBox() {
+//        String querry = "select name from products";
+//
+//        DBConnection connect = new DBConnection();
+//        try(Connection connection = connect.getConnection();
+//            Statement statement = connection.createStatement();
+//            ResultSet resultSet = statement.executeQuery(querry);){
+//            while (resultSet.next()) {
+//                itemNames.add(resultSet.getString("name"));
+//            }
+//            productsComboBox.setItems(itemNames);
+//
+//        } catch (SQLException e){
+//            e.printStackTrace();
+//        }
+//    }
 
     public void handleCloseBtnClick(javafx.scene.input.MouseEvent mouseEvent) {
         Stage stage = (Stage) closeBtnImage.getScene().getWindow();
