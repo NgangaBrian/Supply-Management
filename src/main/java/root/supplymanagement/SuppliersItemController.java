@@ -73,6 +73,7 @@ public class SuppliersItemController {
             ViewSupplierDataController controller = loader.getController();
 
             // Pass data to the new controller
+            controller.setSupplierName(suppliername);
             controller.loadOrdersData(supplierName.getText());
             controller.loadOrderNumbersComboBox(supplierName.getText());
             controller.loadPaymentsDataForSupplier(supplierName.getText());

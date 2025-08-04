@@ -76,7 +76,7 @@
           </Tab>
           <Tab fx:id="paymentsTab" text="Payments">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane fx:id="rootAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <ComboBox fx:id="orderNoComboBox" layoutX="612.0" layoutY="14.0" prefHeight="26.0" prefWidth="221.0" />
                         <Label layoutX="502.0" layoutY="18.0" text="Filter By: ">
