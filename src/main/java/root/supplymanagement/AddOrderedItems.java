@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -21,87 +20,93 @@ import java.util.List;
 
 public class AddOrderedItems {
 
-    @FXML
-    private ImageView closeBtnImage, minimizeBtnImage, maximizeBtnImage;
-    @FXML
-    private TextField itemNameId, unitPrice;
-    @FXML
-    private VBox vboxContainer;
+    @FXML private ImageView closeBtnImage, minimizeBtnImage, maximizeBtnImage;
+    @FXML private TextField itemNameId, unitPrice;
+    @FXML private VBox vboxContainer;
 
     private ObservableList<String> itemNames = FXCollections.observableArrayList();
     private String orderNo;
 
-
     public void initialize() {
         unitPrice.setOnAction(event -> {
-            String itemName = itemNameId.getText();
-            Double amount = Double.valueOf(unitPrice.getText());
-            if (!itemName.trim().isEmpty()) {
+            String itemName = itemNameId.getText().trim();
+            String priceText = unitPrice.getText().trim();
+
+            if (itemName.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter a product name.");
+                return;
+            }
+
+            try {
+                Double amount = Double.valueOf(priceText);
+                if (amount <= 0) {
+                    showAlert(Alert.AlertType.ERROR, "Input Error", "Amount must be greater than 0.");
+                    return;
+                }
                 addProductToList(itemName, amount);
                 itemNameId.clear();
                 unitPrice.clear();
+                itemNameId.requestFocus();
+            } catch (NumberFormatException e) {
+                showAlert(Alert.AlertType.ERROR, "Input Error", "Please enter a valid number for unit price.");
             }
         });
     }
 
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
     public void saveOrderedProducts() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
         if (orderNo == null || orderNo.isEmpty()) {
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Order No is missing!");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Order Missing", "Order number is missing. Please set it before saving.");
             return;
         }
 
         List<ProductOrderModel> productOrders = new ArrayList<>();
 
-        // Loop through VBox children and collect product names and quantities
         for (Node node : vboxContainer.getChildren()) {
-            if (node instanceof HBox) {
-                OrderedProductItemController controller = (OrderedProductItemController) node.getUserData();
-                if (controller == null) {
-                    System.out.println("Controller not found for node!");
+            if (node instanceof HBox hbox) {
+                Object data = hbox.getUserData();
+                if (!(data instanceof OrderedProductItemController controller)) {
+                    System.out.println("Invalid or missing controller on node.");
                     continue;
                 }
 
                 String productName = controller.getProductName();
                 int quantity;
+                double unitPrice;
 
                 try {
                     quantity = controller.getQuantity();
-
+                    unitPrice = controller.getUnitPrice();
                 } catch (NumberFormatException e) {
-                    alert.setAlertType(Alert.AlertType.ERROR);
-                    alert.setHeaderText(null);
-                    alert.setContentText("Invalid quantity format for: " + productName);
+                    showAlert(Alert.AlertType.ERROR, "Invalid Quantity", "Please enter valid numeric values.");
                     return;
                 }
 
                 if (productName.isEmpty() || quantity <= 0) {
-                    System.out.println("Skipping invalid entry: Empty name or invalid quantity.");
-                    continue;
+                    showAlert(Alert.AlertType.ERROR, "Invalid Input", "Each product must have a name and quantity > 0.");
+                    return;
                 }
-                double unitPrices = controller.getUnitPrice();
-                productOrders.add(new ProductOrderModel(productName, quantity, unitPrices));
+
+                productOrders.add(new ProductOrderModel(productName, quantity, unitPrice));
             }
         }
 
         if (productOrders.isEmpty()) {
-            System.out.println("No valid products to save!");
+            showAlert(Alert.AlertType.WARNING, "No Products", "Please add at least one valid product to save.");
             return;
         }
 
         insertProductsIntoDatabase(productOrders);
     }
 
-    public void insertProductsIntoDatabase(List<ProductOrderModel> productOrders) {
+    private void insertProductsIntoDatabase(List<ProductOrderModel> productOrders) {
         String query = "INSERT INTO ordered_products (orderNo, productName, quantity, unit_price, amount) VALUES (?, ?, ?, ?, ?)";
-
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
-        DBConnection connect = new DBConnection();
-        try (Connection connection = connect.getConnection();
+        try (Connection connection = new DBConnection().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             for (ProductOrderModel product : productOrders) {
@@ -113,91 +118,69 @@ public class AddOrderedItems {
                 preparedStatement.addBatch();
             }
 
-            int[] rowsAffected = preparedStatement.executeBatch();
-            if (rowsAffected.length > 0) {
+            int[] results = preparedStatement.executeBatch();
+            int successful = 0;
+            for (int result : results) {
+                if (result >= 0 || result == Statement.SUCCESS_NO_INFO) {
+                    successful++;
+                }
+            }
 
-                alert.setTitle("Success");
-                alert.setHeaderText(null);
-                alert.setContentText("Ordered products saved successfully!");
-                alert.showAndWait();
-
-                // ✅ Close the window
+            if (successful > 0) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Ordered products saved successfully.");
                 Stage stage = (Stage) vboxContainer.getScene().getWindow();
                 stage.close();
             } else {
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setHeaderText(null);
-                alert.setContentText("Ordered products could not be saved!");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Database Error", "No products were inserted. Please try again.");
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
-            alert.setAlertType(Alert.AlertType.ERROR);
-            alert.setTitle("Database Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to save products. Please try again.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while saving products.\n" + e.getMessage());
         }
     }
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
-    }
-
     private void addProductToList(String productName, Double amount) {
-        // Check if the product is already in the VBox
         for (Node node : vboxContainer.getChildren()) {
-            if (node instanceof HBox) {
-                Label label = (Label) node.lookup("#productName");
-                Label label2 = (Label) node.lookup("#itemAmount");
-                if (label != null && label.getText().equals(productName)) {
-                    System.out.println("Product already added: " + productName);
-                    return; // Exit method without adding a duplicate
+            if (node instanceof HBox hbox) {
+                Label nameLabel = (Label) hbox.lookup("#productName");
+                if (nameLabel != null && nameLabel.getText().equalsIgnoreCase(productName)) {
+                    showAlert(Alert.AlertType.WARNING, "Duplicate", "Product already added: " + productName);
+                    return;
                 }
             }
         }
 
         try {
-            // Load FXML and its controller
             FXMLLoader loader = new FXMLLoader(getClass().getResource("orderedProductItem.fxml"));
             Parent hboxNode = loader.load();
 
             OrderedProductItemController controller = loader.getController();
             controller.setProductName(productName, amount);
-
-            // ✅ Store the controller in the HBox (so we can retrieve it later)
             hboxNode.setUserData(controller);
 
-            // Set up the remove action
             controller.setOnRemove(() -> vboxContainer.getChildren().remove(hboxNode));
-
-            // Add to VBox
             vboxContainer.getChildren().add(hboxNode);
+
         } catch (IOException e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "UI Error", "Failed to load product item component.");
         }
     }
 
+    // Utility method for showing alerts
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    // Optional: remove unused method if not needed
     private void removeProduct(HBox productHBox) {
         vboxContainer.getChildren().remove(productHBox);
     }
-
-//    private void loadProductsComboBox() {
-//        String querry = "select name from products";
-//
-//        DBConnection connect = new DBConnection();
-//        try(Connection connection = connect.getConnection();
-//            Statement statement = connection.createStatement();
-//            ResultSet resultSet = statement.executeQuery(querry);){
-//            while (resultSet.next()) {
-//                itemNames.add(resultSet.getString("name"));
-//            }
-//            productsComboBox.setItems(itemNames);
-//
-//        } catch (SQLException e){
-//            e.printStackTrace();
-//        }
-//    }
 
     public void handleCloseBtnClick(javafx.scene.input.MouseEvent mouseEvent) {
         Stage stage = (Stage) closeBtnImage.getScene().getWindow();
@@ -206,8 +189,8 @@ public class AddOrderedItems {
 
     public void handleMinimizeBtnClick(javafx.scene.input.MouseEvent mouseEvent) {
         for (Window window : Stage.getWindows()) {
-            if (window instanceof Stage) {
-                ((Stage) window).setIconified(true); // Minimize each stage
+            if (window instanceof Stage stage) {
+                stage.setIconified(true);
             }
         }
     }
