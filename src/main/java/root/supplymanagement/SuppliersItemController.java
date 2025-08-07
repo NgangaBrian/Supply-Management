@@ -38,10 +38,10 @@ public class SuppliersItemController {
         this.viewSuppliersController = controller;
     }
 
+    @FXML
     public void initialize(){
         deleteSupplier.setOnMouseClicked(this::handleDeleteSupplier);
         editSupplier.setOnMouseClicked(this::handleEditSupplier);
-
         supplierItemView.setOnMouseClicked(event -> {handleItemClick();});
     }
 
@@ -61,10 +61,8 @@ public class SuppliersItemController {
 
     @FXML
     private void handleItemClick() {
-        System.out.println("HBox clicked! Opening view-ordered-items.fxml...");
         try {
             String suppliername = supplierName.getText();
-
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view-supplier-data.fxml"));
             Parent root = loader.load();
@@ -117,11 +115,10 @@ public class SuppliersItemController {
     }
 
     private void handleEditSupplier(MouseEvent event) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("add-suppliers.fxml"));
         try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("add-suppliers.fxml"));
             Parent root = loader.load();
             AddSuppliers controller = loader.getController();
-
 
             // Pass the ViewSuppliersController reference to AddSuppliers
             controller.setViewSuppliersController(viewSuppliersController);
@@ -151,7 +148,4 @@ public class SuppliersItemController {
             return false;
         }
     }
-
-
-
 }

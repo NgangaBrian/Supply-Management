@@ -28,24 +28,18 @@ public class ChangePasswordController {
     }
 
     private String getCurrentPasswordFromDB(String username) {
-        String query = "SELECT password FROM users WHERE id = ?"; // Change logic to get user ID dynamically
+        final String query = "SELECT password FROM users WHERE id = ?"; // Change logic to get user ID dynamically
         DBConnection connect = new DBConnection();
-        try {
-            Connection conn = connect.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query);
-            System.out.println("User ID: "+loggedInUser.getId());
+        try (Connection conn = connect.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query)){
+
             stmt.setInt(1, loggedInUser.getId());
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String pass = rs.getString("password");
-                System.out.println("Password: "+pass);
-                return pass;
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Something went wrong");
-                alert.showAndWait();
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("password");
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error", "User not found in database.");
+                }
             }
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to retrieve password.");
@@ -57,14 +51,6 @@ public class ChangePasswordController {
         this.loggedInUser = user;
     }
 
-    public void showUser(){
-        String name = loggedInUser.getFirstname();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information");
-        alert.setHeaderText(null);
-        alert.setContentText("Welcome "  + loggedInUser.getFirstname() + " " + loggedInUser.getLastname() + " " + loggedInUser.getId());
-        alert.showAndWait();
-    }
 
     private boolean updatePasswordInDatabase(String newPass) {
         String hashedPass = BCrypt.hashpw(newPass, BCrypt.gensalt());
@@ -102,7 +88,7 @@ public class ChangePasswordController {
 
 
         if (!newPass.equals(confirmPass)) {
-            showAlert(Alert.AlertType.ERROR, "Error", "New password and confirmation do not match.");
+            showAlert(Alert.AlertType.ERROR, "Error", "Password do not match.");
             return;
         }
 

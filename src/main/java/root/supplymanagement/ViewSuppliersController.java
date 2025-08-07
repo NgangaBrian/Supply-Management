@@ -67,13 +67,12 @@ public class ViewSuppliersController implements Initializable {
         supplierItems.getChildren().clear(); // Clear existing items
 
         DBConnection connect = new DBConnection();
-        Connection connection = connect.getConnection();
 
         String query = "SELECT name, phonenumber, address, email FROM suppliers";
 
-        try {
+        try (Connection connection = connect.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery()){
 
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
@@ -91,11 +90,6 @@ public class ViewSuppliersController implements Initializable {
 
                 supplierItems.getChildren().add(node);
             }
-
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

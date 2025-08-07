@@ -11,7 +11,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class OrdersItemController {
     @FXML
@@ -19,14 +22,19 @@ public class OrdersItemController {
     @FXML
     private HBox supplietItemView;
 
+    private final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+
     public void setOrderData(String orderno, String suppliername, Double totalamount, Double paidamount,
                              String currency, Double balamount, LocalDate duedate) {
         orderNo.setText(orderno);
         supplierName.setText(suppliername);
-        totalAmount.setText(currency +" " + totalamount.toString());
-        paidAmount.setText(currency +" " + paidamount.toString());
-        balAmount.setText(currency +" " + balamount.toString());
-        dueDate.setText(duedate.toString());
+        totalAmount.setText(currency +" " + moneyFormat.format(totalamount));
+        paidAmount.setText(currency +" " + moneyFormat.format(paidamount));
+        balAmount.setText(currency +" " + moneyFormat.format(balamount));
+        dueDate.setText(dateFormatter.format(duedate));
 
         // Attach click event to HBox
         supplietItemView.setOnMouseClicked(event -> handleItemClick());
@@ -46,7 +54,6 @@ public class OrdersItemController {
 
     @FXML
     private void handleItemClick() {
-        System.out.println("HBox clicked! Opening view-ordered-items.fxml...");
         try {
             String orderNumber = orderNo.getText();
             String suppliername = supplierName.getText();

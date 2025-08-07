@@ -23,6 +23,7 @@ public class SettingsController {
 
     private User loggedInUser;
 
+    @FXML
     public void initialize() {
         loadImages();
         editProducts(null);

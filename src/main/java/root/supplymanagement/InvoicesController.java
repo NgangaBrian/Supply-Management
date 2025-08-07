@@ -134,14 +134,9 @@ public class InvoicesController implements Initializable {
 
 
     private void loadImages() {
-        Image exitImage = new Image(getClass().getResource("/Images/closeBtn.png").toExternalForm());
-        closeBtnImage.setImage(exitImage);
-
-        Image minimizeImage = new Image(getClass().getResource("/Images/minimizeBtn.png").toExternalForm());
-        minimizeBtnImage.setImage(minimizeImage);
-
-        Image maximizeImage = new Image(getClass().getResource("/Images/maximizeBtn.png").toExternalForm());
-        maximizeBtnImage.setImage(maximizeImage);
+        closeBtnImage.setImage(new Image(getClass().getResource("/Images/closeBtn.png").toExternalForm()));
+        minimizeBtnImage.setImage(new Image(getClass().getResource("/Images/minimizeBtn.png").toExternalForm()));
+        maximizeBtnImage.setImage(new Image(getClass().getResource("/Images/maximizeBtn.png").toExternalForm()));
     }
 
     public void handleCloseBtnClick(javafx.scene.input.MouseEvent mouseEvent) {

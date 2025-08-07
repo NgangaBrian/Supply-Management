@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,32 +33,29 @@ public class EditPaymentMethods {
     public void addPaymentMethod(){
         String paymentMethod = paymentName.getText();
         if(paymentMethod.isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Please enter a payment method");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Validation Error", "Please enter a payment method.");
             return;
         }
         String querry = "INSERT INTO paymentmethods (name) VALUES(?)";
 
         DBConnection con = new DBConnection();
-        Connection connection = con.getConnection();
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(querry);
+
+        try (Connection connection = con.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(querry)){
+
             preparedStatement.setString(1, paymentMethod);
             int rowsAffected = preparedStatement.executeUpdate();
+
             if(rowsAffected>0){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText(null);
-                alert.setContentText("Payment method added successfully");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Payment method added successfully.");
                 loadMethodsToView();
                 paymentName.clear();
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to add payment method.");
             }
         } catch (SQLException e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Could not add payment method.\n" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -65,53 +63,55 @@ public class EditPaymentMethods {
 
     public void loadMethodsToView() {
         // Example: simulate getting data from database
-        List<Product> products = getProductsFromDatabase();
+        List<String> paymentMethods = getPaymentMethodsFromDatabase();
         itemsVbox.getChildren().clear();
-        for (Product product : products) {
+        for (String method : paymentMethods) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("item.fxml"));
                 Parent itemNode = loader.load();
 
                 // Get controller of productItem.fxml and set the product name
                 ItemController controller = loader.getController();
-                controller.setItem(product.getName());
+                controller.setItem(method);
 
                 // Add the item to the VBox
                 itemsVbox.getChildren().add(itemNode);
             } catch (IOException e) {
                 e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to load payment method view.");
             }
         }
     }
 
-    private List<Product> getProductsFromDatabase() {
-        List<Product> products = new ArrayList<>();
+    private List<String> getPaymentMethodsFromDatabase() {
+        List<String> methods = new ArrayList<>();
 
         String query = "SELECT name FROM paymentmethods";
         DBConnection dbConnection = new DBConnection();
-        Connection connection = dbConnection.getConnection();
 
-        try {
+
+        try (Connection connection = dbConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
-            var resultSet = statement.executeQuery();
+            ResultSet resultSet= statement.executeQuery()){
 
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
-                products.add(new Product(name));
+                methods.add(name);
             }
 
-            resultSet.close();
-            statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to load products from the database.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to retrieve payment methods.");
         }
 
-        return products;
+        return methods;
     }
 
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

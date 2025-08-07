@@ -98,18 +98,13 @@ public class AddSuppliers {
     }
 
     public void saveDetails(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Save Details");
-
         String supplierName = supplierNameTF.getText();
         String phoneNo = phoneNoTF.getText();
         String email = emailTF.getText();
         String address = addressTF.getText();
 
         if(supplierName.isEmpty() || phoneNo.isEmpty() || email.isEmpty() || address.isEmpty()){
-            alert.setAlertType(Alert.AlertType.WARNING);
-            alert.setContentText("All fields are required!");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "All fields are required");
         }
         else{
             if(isEditMode){
@@ -123,9 +118,6 @@ public class AddSuppliers {
 
     }
     private void addNewSupplier(String supplierName, String phoneNo, String email, String address) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Save Details");
-
         DBConnection connect = new DBConnection();
         Connection connection1 = connect.getConnection();
 
@@ -141,39 +133,28 @@ public class AddSuppliers {
             int rowsaffected = preparedStatement.executeUpdate();
 
             if(rowsaffected>0){
-                alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setContentText("Details have been saved successfully!");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Supplier added successfully");
                 supplierNameTF.clear();
                 phoneNoTF.clear();
                 emailTF.clear();
                 addressTF.clear();
                 supplierNameTF.requestFocus();
             } else {
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setContentText("Failed to save details!");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "failed", "Could not save details. Try again Later");
             }
             preparedStatement.close();
             connection1.close();
         } catch (SQLIntegrityConstraintViolationException e){
-            alert.setAlertType(Alert.AlertType.ERROR);
-            alert.setContentText("Supplier with the same phone number or email already exists!");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Duplicate Entry", "Supplier with the same phone number or email already exists!");
         }catch (SQLException e) {
             e.printStackTrace();
             e.getCause();
-            alert.setAlertType(Alert.AlertType.ERROR);
-            alert.setContentText("Failed. Try again later.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while saving the supplier.");
             throw new RuntimeException(e);
         }
     }
 
     public void updateSupplier(String supplierName, String phoneNo, String email, String address){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Update Supplier Details");
-
         DBConnection connect = new DBConnection();
         Connection connection = connect.getConnection();
 
@@ -189,9 +170,7 @@ public class AddSuppliers {
             int rowsAffected = preparedStatement.executeUpdate();
 
             if(rowsAffected>0){
-                alert.setAlertType(Alert.AlertType.INFORMATION);
-                alert.setContentText("Supplier has been updated successfully!");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Supplier updated successfully.");
 
                 closePage();
 
@@ -199,18 +178,13 @@ public class AddSuppliers {
                     viewSuppliersController.loadSupplierData();
                 } else {
                     System.out.println("Warning: viewSuppliersController is null. Data will not refresh.");
+                    showAlert(Alert.AlertType.ERROR, "Update Failed", "No supplier was updated.");
                 }
-            } else {
-                alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setContentText("Failed to update details!");
-                alert.showAndWait();
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            alert.setAlertType(Alert.AlertType.ERROR);
-            alert.setContentText("Failed! Try again later.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to update supplier.");
             e.getCause();
         } finally {
             try {
@@ -255,5 +229,12 @@ public class AddSuppliers {
 
         Image maximizeImage = new Image(getClass().getResource("/Images/maximizeBtn.png").toExternalForm());
         maximizeBtnImage.setImage(maximizeImage);
+    }
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

@@ -34,6 +34,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -59,6 +60,11 @@ public class ViewOrderedItemsController {
     public String balance;
     public String totalAmount;
 
+    private final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+
+
+    @FXML
     public void initialize() {
         loadImages();
     }
@@ -85,10 +91,13 @@ public class ViewOrderedItemsController {
                     vBox.getChildren().add(node);
                 }
             }
-            preparedStatement.close();
-            connection.close();
         } catch (IOException | SQLException e) {
             e.printStackTrace(); // Ideally, log this error instead of printing
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Unable to load view ordered products.");
+            alert.showAndWait();
         }
     }
 
@@ -101,7 +110,18 @@ public class ViewOrderedItemsController {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                generateOrderReportLogic();
+                try {
+                    generateOrderReportLogic();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Could not generate order report");
+                        alert.showAndWait();
+                    });
+                }
                 return null;
             }
             @Override
@@ -113,6 +133,11 @@ public class ViewOrderedItemsController {
             protected void failed() {
                 hideLoadingOverlay();
                 getException().printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Could not generate order report");
+                alert.showAndWait();
             }
         };
 
@@ -133,7 +158,6 @@ public class ViewOrderedItemsController {
             ResultSet orderRs = orderStmt.executeQuery();
 
             if (!orderRs.next()) {
-                System.out.println("Order Not Found");
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Order Not Found");
                 alert.setContentText("Order Not Found");
@@ -210,15 +234,18 @@ public class ViewOrderedItemsController {
             ComponentBuilder<?, ?> rightColumn = Components.verticalList(
                     Components.horizontalList(
                             Components.text("Total Amount: ").setStyle(Styles.style().bold()),
-                            Components.text(orderRs.getString("currency") + " " + orderRs.getBigDecimal("totalAmount"))
+                            Components.text(orderRs.getString("currency") + " " +
+                                    String.format("%,.2f",orderRs.getBigDecimal("totalAmount")))
                     ),
                     Components.horizontalList(
                             Components.text("Paid Amount: ").setStyle(Styles.style().bold()),
-                            Components.text(orderRs.getString("currency") + " " + orderRs.getBigDecimal("paidAmount"))
+                            Components.text(orderRs.getString("currency") + " " +
+                                    String.format("%,.2f",orderRs.getBigDecimal("paidAmount")))
                     ),
                     Components.horizontalList(
                             Components.text("Balance: ").setStyle(Styles.style().bold()),
-                            Components.text(orderRs.getString("currency") + " " + orderRs.getBigDecimal("balance"))
+                            Components.text(orderRs.getString("currency") + " " +
+                                    String.format("%,.2f",orderRs.getBigDecimal("balance")))
                     ),
                     Components.horizontalList(
                             Components.text("Due Date: ").setStyle(Styles.style().bold()),
@@ -266,12 +293,14 @@ public class ViewOrderedItemsController {
                                             .setBorder(Styles.pen1Point())),
                             Columns.column("Unit Price", "unit_price", DataTypes.doubleType())
                                     .setTitleStyle(Styles.style().bold())
+                                    .setPattern("#,##0.00")
                                     .setStyle(Styles.style()
                                             .setPadding(5)
                                             .setBorder(Styles.pen1Point())),
 
                             Columns.column("Amount", "amount", DataTypes.doubleType())
                                     .setTitleStyle(Styles.style().bold())
+                                    .setPattern("#,##0.00")
                                     .setStyle(Styles.style()
                                             .setPadding(5)
                                             .setBorder(Styles.pen1Point()))
@@ -295,13 +324,18 @@ public class ViewOrderedItemsController {
             viewer.setVisible(true);
         }
         catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Could not generate report. Please try again later.");
+            alert.showAndWait();
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
     private void showLoadingOverlay() {
         ProgressIndicator spinner = new ProgressIndicator();
-        Label label = new Label("Generating Report... Please wait...");
+        Label label = new Label("Generating Report. Please wait...");
         label.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
 
         VBox overlayBox = new VBox(10, spinner, label);
@@ -360,11 +394,18 @@ public class ViewOrderedItemsController {
         this.totalAmount = totalAmount;
         this.duedate = duedate;
 
+        String currency = totalAmount.replaceAll("[\\d.,-]", "").trim();  // "KES"
+
+        // Extract numeric values from each field
+        double totalAmountInt = Double.parseDouble(totalAmount.replaceAll("[^\\d.-]", ""));
+        double paidAmountInt = Double.parseDouble(paidAmount.replaceAll("[^\\d.-]", ""));
+        double balanceInt = Double.parseDouble(balance.replaceAll("[^\\d.-]", ""));
+
         orderNoLB.setText(orderNo);
-        totalAmountLB.setText(String.valueOf(totalAmount));
+        totalAmountLB.setText(currency + " " + String.valueOf(moneyFormat.format(totalAmountInt)));
         supplierNameLB.setText(supplierName);
         dueDateLB.setText(duedate);
-        paidAmountLB.setText(String.valueOf(paidAmount));
-        balanceLB.setText(String.valueOf(balance));
+        paidAmountLB.setText(currency + " " + String.valueOf(moneyFormat.format(paidAmountInt)));
+        balanceLB.setText(currency + " " + String.valueOf(moneyFormat.format(balanceInt)));
     }
 }

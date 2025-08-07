@@ -39,12 +39,8 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Image brandingImage = new Image(getClass().getResource("/Images/kimsalogo.png").toExternalForm());
-        brandingImageView.setImage(brandingImage);
-
-        File lockFile = new File("Images/lock.png");
-        Image lockImage = new Image(lockFile.toURI().toString());
-        lockImageView.setImage(lockImage);
+        brandingImageView.setImage(new Image(getClass().getResource("/Images/kimsalogo.png").toExternalForm()));
+        lockImageView.setImage(new Image(getClass().getResource("/Images/lock.png").toExternalForm()));
 
         usernameTextField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
@@ -82,12 +78,13 @@ public class LoginController implements Initializable {
 
     public void validateLogin(ActionEvent event) {
         DBConnection connect = new DBConnection();
-        Connection connection1 = connect.getConnection();
+
 
         String query = "SELECT * FROM users WHERE username = ?";
 
-        try {
-            PreparedStatement preparedStatement = connection1.prepareStatement(query);
+        try (Connection connection1 = connect.getConnection();
+            PreparedStatement preparedStatement = connection1.prepareStatement(query)){
+
             preparedStatement.setString(1, usernameTextField.getText());
             ResultSet resultSet = preparedStatement.executeQuery();
 

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class EditProductsController {
                 itemsVbox.getChildren().add(itemNode);
             } catch (IOException e) {
                 e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "FXML Error", "Failed to load product view.");
             }
         }
     }
@@ -63,26 +65,20 @@ public class EditProductsController {
 
         String query = "SELECT name FROM products";
         DBConnection dbConnection = new DBConnection();
-        Connection connection = dbConnection.getConnection();
 
-        try {
+
+        try (Connection connection = dbConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(query);
-            var resultSet = statement.executeQuery();
+            ResultSet resultSet = statement.executeQuery()){
 
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 products.add(new Product(name));
             }
 
-            resultSet.close();
-            statement.close();
-            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to load products from the database.");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to load products from database.");
         }
 
         return products;
@@ -94,34 +90,29 @@ public class EditProductsController {
         String productName = nameTF.getText();
         // String imageUrl = uploadImage(productName);
 
+        if (productName.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Validation Error", "Product name cannot be empty.");
+            return;
+        }
+
         String querry = "insert into products (name) values (?)";
         DBConnection con = new DBConnection();
-        Connection connection = con.getConnection();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(querry);
+
+        try (Connection connection = con.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(querry)){
             preparedStatement.setString(1, productName);
             //preparedStatement.setString(2, imageUrl);
             int rowsAffected = preparedStatement.executeUpdate();
             if(rowsAffected > 0){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setHeaderText(null);
-                alert.setContentText("Product added successfully!");
-                alert.showAndWait();
-                loadProductsToView();
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Product added successfully!");
                 nameTF.clear();
                 imageNameLB.setText("");
+                loadProductsToView();
             } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText(null);
-                alert.setContentText("Product could not be added!");
-                alert.showAndWait();
+                showAlert(Alert.AlertType.ERROR, "Failure", "Product could not be added.");
             }
         }catch (SQLException e){
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setContentText("Failed. Please try again!");
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to add product.\n" + e.getMessage());
         }
     }
 
@@ -133,6 +124,14 @@ public class EditProductsController {
         if (selectedFile != null) {
             imageNameLB.setText(selectedFile.getName());
         }
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 //    public String uploadImage(String productName) {
@@ -172,10 +171,5 @@ public class EditProductsController {
 //        }
 //
 //    }
+
 }
-// todo; Key points to stay happy
-// One act of kindness
-// Exercise
-// Meditation
-// Gratitude -3 things you are grateful for today
-//

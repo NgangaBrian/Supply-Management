@@ -13,6 +13,7 @@ import javafx.stage.Window;
 import java.io.File;
 import java.net.URL;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,10 @@ public class RecordPaymentController implements Initializable {
     private ObservableList<String> supplierNames = FXCollections.observableArrayList();
     private ObservableList<String> paymentMethods = FXCollections.observableArrayList();
     Double balance;
+    String currency;
     Double initialPaidAmount;
+
+    private final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
 
 
     @Override
@@ -96,7 +100,16 @@ public class RecordPaymentController implements Initializable {
             int orderId = getSelectedOrderId();
             String orderNo = (orderNoCombo.getValue() != null) ? orderNoCombo.getValue() : "";
             Double paidAmount = Double.valueOf(paidAmountTF.getText());
-            balance = Double.parseDouble(balanceTF.getText());
+
+            String balanceText = balanceTF.getText().trim();
+
+            // Extract currency (non-numeric characters before the number)
+            String currency = balanceText.replaceAll("[\\d.,\\s-]", ""); // Removes numbers, commas, dot, space, and minus
+
+            // Extract numeric value
+            String numericOnly = balanceText.replaceAll("[^\\d.-]", ""); // Keeps digits, dot, minus
+            balance = Double.parseDouble(numericOnly);
+
             String paymentMethod = (paymentMethodCombo.getValue() != null) ? paymentMethodCombo.getValue() : "";
             String referenceNo = referenceNoTF.getText();
             Date date = Date.valueOf(datePicker.getValue().toString());
@@ -116,11 +129,11 @@ public class RecordPaymentController implements Initializable {
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    insertDetails(supplierId, supplierName, orderId, orderNo, paidAmount, paymentMethod, referenceNo, date, additionalNotes, balance);
+                    insertDetails(supplierId, supplierName, orderId, orderNo, paidAmount, currency, paymentMethod, referenceNo, date, additionalNotes, balance);
                 }
 
             } else {
-                insertDetails(supplierId, supplierName, orderId, orderNo, paidAmount, paymentMethod, referenceNo, date, additionalNotes, balance);
+                insertDetails(supplierId, supplierName, orderId, orderNo, paidAmount, currency, paymentMethod, referenceNo, date, additionalNotes, balance);
             }
 
 
@@ -134,7 +147,7 @@ public class RecordPaymentController implements Initializable {
 
     }
 
-    private void insertDetails(int supplierId, String supplierName, int orderId, String orderNo, Double paidAmount, String paymentMethod, String referenceNo, Date date, String additionalNotes, double balance) {
+    private void insertDetails(int supplierId, String supplierName, int orderId, String orderNo, Double paidAmount, String currency, String paymentMethod, String referenceNo, Date date, String additionalNotes, double balance) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
         String confirmationMessage = String.format(
@@ -149,17 +162,17 @@ public class RecordPaymentController implements Initializable {
         alert.setContentText(confirmationMessage);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            saveDetails(supplierId, orderId, paidAmount, paymentMethod, referenceNo, date, additionalNotes);
+            saveDetails(supplierId, orderId, paidAmount, currency, paymentMethod, referenceNo, date, additionalNotes);
             updateOrdersTable(paidAmount, balance, orderNo);
         }
     }
 
 
-    private void saveDetails(int supplierId, int order_id, Double paidAmount, String paymentMethod, String referenceNo, Date date, String additionalNotes) {
+    private void saveDetails(int supplierId, int order_id, Double paidAmount, String currency, String paymentMethod, String referenceNo, Date date, String additionalNotes) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Save Details");
 
-        String querry = "Insert into payments (supplier_id, order_id, paidAmount, paymentMethod, referenceNo, date, additionalNotes) values (?,?,?,?,?,?,?)";
+        String querry = "Insert into payments (supplier_id, order_id, paidAmount, currency, paymentMethod, referenceNo, date, additionalNotes) values (?,?,?,?,?,?,?,?)";
 
         DBConnection connection = new DBConnection();
         Connection conn = connection.getConnection();
@@ -169,10 +182,11 @@ public class RecordPaymentController implements Initializable {
             ps.setInt(1, supplierId);
             ps.setInt(2, order_id);
             ps.setDouble(3, paidAmount);
-            ps.setString(4, paymentMethod);
-            ps.setString(5, referenceNo);
-            ps.setDate(6, date);
-            ps.setString(7, additionalNotes);
+            ps.setString(4, currency);
+            ps.setString(5, paymentMethod);
+            ps.setString(6, referenceNo);
+            ps.setDate(7, date);
+            ps.setString(8, additionalNotes);
 
             int rowsAffected = ps.executeUpdate();
 
@@ -213,6 +227,8 @@ public class RecordPaymentController implements Initializable {
                 paidAmountTF.clear();
                 referenceNoTF.clear();
                 balanceTF.clear();
+                supplierCombo.getSelectionModel().clearSelection();
+                orderNoCombo.getSelectionModel().clearSelection();
             } else {
                 System.out.println("Failed to save details");
             }
@@ -224,7 +240,7 @@ public class RecordPaymentController implements Initializable {
 
 
     private void loadBalance(String newValue) {
-        String querry = "Select balance, paidAmount from orders where orderNo = '" + newValue + "'";
+        String querry = "Select balance, paidAmount, currency from orders where orderNo = '" + newValue + "'";
 
         DBConnection con = new DBConnection();
         try(Connection con1 = con.getConnection();
@@ -232,8 +248,9 @@ public class RecordPaymentController implements Initializable {
         ResultSet rs = stmt.executeQuery(querry)) {
             while (rs.next()) {
                 balance = Double.valueOf(rs.getString("balance"));
+                currency = rs.getString("currency");
                 initialPaidAmount = Double.valueOf(rs.getString("paidAmount"));
-                balanceTF.setText(String.valueOf(balance));
+                balanceTF.setText(currency+ " " + String.valueOf(moneyFormat.format(balance)));
             }
 
         } catch (SQLException e){
@@ -332,7 +349,9 @@ public class RecordPaymentController implements Initializable {
             // Check if the input field is empty and set default value to 0.0
             double paidAmount = paidAmountTF.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(paidAmountTF.getText());
             double newBalance = balance - paidAmount;
-            balanceTF.setText(String.valueOf(newBalance));
+            balanceTF.setText(currency + " " + String.valueOf(moneyFormat.format(newBalance)));
+
+
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");

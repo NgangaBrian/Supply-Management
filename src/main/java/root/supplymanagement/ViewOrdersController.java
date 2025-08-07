@@ -16,6 +16,7 @@ import javafx.stage.Window;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;

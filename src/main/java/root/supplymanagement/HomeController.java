@@ -22,8 +22,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import javafx.util.Duration;
+import javafx.scene.input.MouseEvent;
 
-import java.awt.event.MouseEvent;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -171,119 +172,66 @@ public class HomeController implements Initializable {
 
     }
 
-    public void openSettingsPane(javafx.scene.input.MouseEvent mouseEvent){
-        try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("settings.fxml"));
-            Parent root = fxmlLoader.load();
-
-            SettingsController settingsController = fxmlLoader.getController();
-            settingsController.setUserData(loggedInUser);
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 654, 400));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void openSettingsPane(javafx.scene.input.MouseEvent e) {
+        openFXML("settings.fxml", 654, 400, controller -> {
+            if (controller instanceof SettingsController settingsController)
+                settingsController.setUserData(loggedInUser);
+            return null;
+        });
     }
 
-    public void openAddSuppliersPane(javafx.scene.input.MouseEvent mouseEvent){
-        try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("add-suppliers.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 500, 450));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void openAddSuppliersPane(javafx.scene.input.MouseEvent e) {
+        openFXML("add-suppliers.fxml", 500, 450, null);
     }
 
-    public void openViewOrdersPane(javafx.scene.input.MouseEvent mouseEvent){
+    public void openViewOrdersPane(javafx.scene.input.MouseEvent e) {
+        openFXML("view-orders.fxml", 900, 567, null);
+    }
+
+    public void openInvoicePane(javafx.scene.input.MouseEvent e) {
+        openFXML("invoices.fxml", 870, 607, null);
+    }
+
+    public void openRecordOrdersPane(javafx.scene.input.MouseEvent e) {
+        openFXML("record-order.fxml", 816, 628, null);
+    }
+
+    public void openViewSuppliersPane(javafx.scene.input.MouseEvent e) {
+        openFXML("view-suppliers.fxml", 900, 567, null);
+    }
+
+    public void openRecordPaymentsPane(javafx.scene.input.MouseEvent e) {
+        openFXML("record-payment.fxml", 816, 619, null);
+    }
+
+    public void openViewPaymentsPane(javafx.scene.input.MouseEvent e) {
+        openFXML("view-payments.fxml", 1000, 607, null);
+    }
+
+    private void openFXML(String file, int width, int height, javafx.util.Callback<Object, Void> callback) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view-orders.fxml"));
-            Parent root = fxmlLoader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(file));
+            Parent root = loader.load();
+
+            if (callback != null) callback.call(loader.getController());
 
             Stage stage = new Stage();
-            stage.setScene(new Scene(root, 900, 567));
+            stage.setScene(new Scene(root, width, height));
             stage.initStyle(StageStyle.UNDECORATED);
             stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        } catch (IOException ex) {
+            showError("Failed to open view: " + file, ex);
         }
     }
 
-    public void openInvoicePane(javafx.scene.input.MouseEvent mouseEvent){
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("invoices.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 870, 607));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void openRecordOrdersPane(javafx.scene.input.MouseEvent mouseEvent){
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("record-order.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 816, 628));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void openViewSuppliersPane(javafx.scene.input.MouseEvent mouseEvent){
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view-suppliers.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 900, 567));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void openRecordPaymentsPane(javafx.scene.input.MouseEvent mouseEvent){
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("record-payment.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 816, 619));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void openViewPaymentsPane(javafx.scene.input.MouseEvent mouseEvent){
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view-payments.fxml"));
-            Parent root = fxmlLoader.load();
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root, 1000, 607));
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void showError(String message, Exception e) {
+        e.printStackTrace();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(message);
+        alert.setContentText(e.getMessage());
+        alert.showAndWait();
     }
 
     public void handleLogoutClick(javafx.scene.input.MouseEvent mouseEvent) {

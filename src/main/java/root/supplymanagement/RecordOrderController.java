@@ -74,19 +74,19 @@ public class RecordOrderController implements Initializable {
             alert.setTitle("Error");
             alert.setContentText("Invalid input");
             // Handle invalid inputs gracefully (e.g., non-numeric input)
-            balanceTF.setText(null);
+            balanceTF.setText("0.00");
         }
     }
 
     private void loadSupplierNames() {
         String querry = "select id, name from suppliers";
+        Map<String, Integer> supplierMap = new HashMap<>();
 
         DBConnection connect = new DBConnection();
         try(Connection connection = connect.getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(querry);){
 
-            Map<String, Integer> supplierMap = new HashMap<>();
             supplierComboBox.getItems().clear();
 
             while (resultSet.next()) {
@@ -195,31 +195,96 @@ public class RecordOrderController implements Initializable {
     }
 
 
-    public void storeOrder(){
-        String orderNo = orderNoLabel.getText();
-        String supplier = (supplierComboBox.getValue() != null) ? supplierComboBox.getValue() : "";
-        int supplierId = getSelectedSupplierId();
-        String totalAmount = totalAmountTF.getText();
-        String currency = (currencyComboBox.getValue() != null) ? currencyComboBox.getValue() : "";
-        String paidAmount = paidAmountTF.getText();
-        String balance = balanceTF.getText();
-        String invoiceNo = invoiceNoTF.getText();
-        String paymentMethod = (paymentMethodsCombo.getValue() != null) ? paymentMethodsCombo.getValue() : "";
-        String chequeNo = chequeNoTF.getText();
-        LocalDate dueDate = dueDateTF.getValue();
-        LocalDate currentDate = LocalDate.now();
+//    public void storeOrder(){
+//        String orderNo = orderNoLabel.getText();
+//        String supplier = (supplierComboBox.getValue() != null) ? supplierComboBox.getValue() : "";
+//        int supplierId = getSelectedSupplierId();
+//        String totalAmount = totalAmountTF.getText();
+//        String currency = (currencyComboBox.getValue() != null) ? currencyComboBox.getValue() : "";
+//        String paidAmount = paidAmountTF.getText();
+//        String balance = balanceTF.getText();
+//        String invoiceNo = invoiceNoTF.getText();
+//        String paymentMethod = (paymentMethodsCombo.getValue() != null) ? paymentMethodsCombo.getValue() : "";
+//        String chequeNo = chequeNoTF.getText();
+//        LocalDate dueDate = dueDateTF.getValue();
+//        LocalDate currentDate = LocalDate.now();
+//
+//
+//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//        alert.setTitle("Confirmation");
+//
+//        if(orderNo.isEmpty() || supplier.isEmpty() || totalAmount.isEmpty() || currency.isEmpty() || paidAmount.isEmpty() || balance.isEmpty() ||
+//        invoiceNo.isEmpty() || paymentMethod.isEmpty() || chequeNo.isEmpty() || dueDate == null){
+//            alert.setAlertType(Alert.AlertType.WARNING);
+//            alert.setTitle("Warning");
+//            alert.setContentText("Please fill all the fields");
+//            alert.showAndWait();
+//            return;
+//        } else {
+//
+//            String confirmationMessage = String.format(
+//                    "Order No: %s\nSupplier: %s\nTotal Amount: %s %s\nPaid Amount: %s %s\n" +
+//                            "Balance: %s %s\nInvoice No: %s\nPayment Method: %s\nCheque No: %s\nDue Date: %s\n\n" +
+//                            "Are you sure you want to insert this order?",
+//                    orderNo, supplier,
+//                    currency, totalAmount,
+//                    currency, paidAmount,
+//                    currency, balance,
+//                    invoiceNo, paymentMethod, chequeNo, dueDate
+//            );
+//
+//
+//            alert.setHeaderText("Confirmation Details");
+//            alert.setContentText(confirmationMessage);
+//
+//            Optional<ButtonType> result = alert.showAndWait();
+//            if (result.isPresent() && result.get() == ButtonType.OK) {
+////                int orderId = insertOrderRecord(orderNo, supplier, totalAmount, paidAmount, currency,
+////                        balance, invoiceNo, paymentMethod, chequeNo, dueDate);
+//
+//                updatePayments(supplierId, orderId, paidAmount, currency, paymentMethod, invoiceNo, currentDate);
+//            }
+//        }
+//    }
 
+    public void storeOrder() {
+        String orderNo = orderNoLabel.getText();
+        String supplier = supplierComboBox.getValue();
+        String currency = currencyComboBox.getValue();
+        String paymentMethod = paymentMethodsCombo.getValue();
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation");
 
-        if(orderNo.isEmpty() || supplier.isEmpty() || totalAmount.isEmpty() || currency.isEmpty() || paidAmount.isEmpty() || balance.isEmpty() ||
-        invoiceNo.isEmpty() || paymentMethod.isEmpty() || chequeNo.isEmpty() || dueDate == null){
+        if (supplier == null || currency == null || paymentMethod == null ||
+                totalAmountTF.getText().isEmpty() || paidAmountTF.getText().isEmpty() ||
+                balanceTF.getText().isEmpty() || invoiceNoTF.getText().isEmpty() ||
+                chequeNoTF.getText().isEmpty() || dueDateTF.getValue() == null) {
             alert.setAlertType(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setContentText("Please fill all the fields");
             alert.showAndWait();
-        } else {
+            return;
+        }
+
+        try {
+            double totalAmount = Double.parseDouble(totalAmountTF.getText());
+            double paidAmount = Double.parseDouble(paidAmountTF.getText());
+            double balance = Double.parseDouble(balanceTF.getText());
+
+            if (totalAmount < 0 || paidAmount < 0 || balance < 0) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setTitle("Warning");
+                alert.setContentText("Amounts cannot be negative.");
+                alert.showAndWait();
+                return;
+            }
+
+            String invoiceNo = invoiceNoTF.getText();
+            String chequeNo = chequeNoTF.getText();
+            LocalDate dueDate = dueDateTF.getValue();
+            LocalDate currentDate = LocalDate.now();
+            int supplierId = getSelectedSupplierId();
 
             String confirmationMessage = String.format(
                     "Order No: %s\nSupplier: %s\nTotal Amount: %s %s\nPaid Amount: %s %s\n" +
@@ -235,14 +300,23 @@ public class RecordOrderController implements Initializable {
 
             alert.setHeaderText("Confirmation Details");
             alert.setContentText(confirmationMessage);
-
             Optional<ButtonType> result = alert.showAndWait();
+
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 int orderId = insertOrderRecord(orderNo, supplier, totalAmount, paidAmount, currency,
-                        balance, invoiceNo, paymentMethod, chequeNo, dueDate);
-                // todo; return orderId
-                updatePayments(supplierId, orderId, paidAmount, paymentMethod, invoiceNo, currentDate);
+                        balance, invoiceNo, paymentMethod, chequeNo, dueDate);                if (orderId > 0) {
+                    updatePayments(supplierId, orderId, paidAmount, currency, paymentMethod, invoiceNo, currentDate);
+                    prepareForNextEntry();
+                    prepareForNextEntry();
+                }
             }
+
+        } catch (NumberFormatException e) {
+            alert.setAlertType(Alert.AlertType.ERROR);
+            alert.setTitle("Warning");
+            alert.setContentText("Please enter valid numeric values for amounts.");
+            alert.showAndWait();
+            return;
         }
     }
 
@@ -255,21 +329,23 @@ public class RecordOrderController implements Initializable {
         }
     }
 
-    private void updatePayments(int supplierId, int orderId, String paidAmount, String paymentMethod, String invoiceNo, LocalDate currentDate) {
+    private void updatePayments(int supplierId, int orderId, Double paidAmount, String currency, String paymentMethod, String invoiceNo, LocalDate currentDate) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Save Details");
 
         DBConnection connect = new DBConnection();
-        Connection connection1 = connect.getConnection();
-        String querry = "insert into payments(supplier_id, order_id, paidAmount, paymentMethod, referenceNo, date) values(?,?,?,?,?,?)";
-        try {
-            PreparedStatement stmt = connection1.prepareStatement(querry);
+
+        String querry = "insert into payments(supplier_id, order_id, paidAmount, currency, paymentMethod, referenceNo, date) values(?,?,?,?,?,?,?)";
+        try (Connection connection1 = connect.getConnection();
+            PreparedStatement stmt = connection1.prepareStatement(querry)){
+
             stmt.setInt(1, supplierId);
             stmt.setInt(2, orderId);
-            stmt.setString(3, paidAmount);
-            stmt.setString(4, paymentMethod);
-            stmt.setString(5, invoiceNo);
-            stmt.setString(6, currentDate.toString());
+            stmt.setDouble(3, paidAmount);
+            stmt.setString(4, currency);
+            stmt.setString(5, paymentMethod);
+            stmt.setString(6, invoiceNo);
+            stmt.setString(7, currentDate.toString());
 
 
             int rowsAffected = stmt.executeUpdate();
@@ -278,7 +354,7 @@ public class RecordOrderController implements Initializable {
                 // Do nothing
             } else {
                 alert.setAlertType(Alert.AlertType.ERROR);
-                alert.setContentText("Failed to save details!");
+                alert.setContentText("Failed to save payment details!");
                 alert.showAndWait();
             }
         } catch (SQLException e){
@@ -291,25 +367,26 @@ public class RecordOrderController implements Initializable {
         }
     }
 
-    public int insertOrderRecord(String orderNo, String supplier, String totalAmount, String paidAmount, String currency, String balance, String invoiceNo, String paymentMethod, String chequeNo, LocalDate dueDate){
+    public int insertOrderRecord(String orderNo, String supplier, Double totalAmount, Double paidAmount, String currency, Double balance, String invoiceNo, String paymentMethod, String chequeNo, LocalDate dueDate){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Save Details");
 
         DBConnection connect = new DBConnection();
-        Connection connection1 = connect.getConnection();
+
 
         String insertSupplier = "insert into orders(orderNo, supplier, totalAmount, paidAmount, currency, balance, invoiceNo, paymentMethod, referenceNo, dueDate) values(?,?,?,?,?,?,?,?,?,?)";
         int generatedId = -1; // Variable to store the generated ID
 
 
-        try {
-            PreparedStatement preparedStatement = connection1.prepareStatement(insertSupplier, Statement.RETURN_GENERATED_KEYS);
+        try (Connection connection1 = connect.getConnection();
+            PreparedStatement preparedStatement = connection1.prepareStatement(insertSupplier, Statement.RETURN_GENERATED_KEYS)){
+
             preparedStatement.setString(1, orderNo);
             preparedStatement.setString(2, supplier);
-            preparedStatement.setString(3, totalAmount);
-            preparedStatement.setString(4, paidAmount);
+            preparedStatement.setDouble(3, totalAmount);
+            preparedStatement.setDouble(4, paidAmount);
             preparedStatement.setString(5, currency);
-            preparedStatement.setString(6, balance);
+            preparedStatement.setDouble(6, balance);
             preparedStatement.setString(7, invoiceNo);
             preparedStatement.setString(8, paymentMethod);
             preparedStatement.setString(9, chequeNo);
@@ -332,8 +409,6 @@ public class RecordOrderController implements Initializable {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ordered-items.fxml"));
                     Parent root = fxmlLoader.load();
 
-
-
                     Stage stage = new Stage();
                     stage.setScene(new Scene(root, 550, 465));
                     stage.initStyle(StageStyle.UNDECORATED);
@@ -341,7 +416,6 @@ public class RecordOrderController implements Initializable {
                     AddOrderedItems controller = fxmlLoader.getController();
                     controller.setOrderNo(orderNo);
 
-                    prepareForNextEntry();
 
                     // Ensure the new window is on top and focused
                     stage.setAlwaysOnTop(true);
@@ -383,8 +457,15 @@ public class RecordOrderController implements Initializable {
         chequeNoTF.clear();
 
         // Reset combo boxes
-        supplierComboBox.getSelectionModel().select(0);
-        paymentMethodsCombo.getSelectionModel().select(0);
+        supplierComboBox.setEditable(true);
+        paymentMethodsCombo.setEditable(true);
+        currencyComboBox.setEditable(true);
+        supplierComboBox.setValue(null);
+        paymentMethodsCombo.setValue(null);
+        currencyComboBox.setValue(null);
+        supplierComboBox.setEditable(false);
+        paymentMethodsCombo.setEditable(false);
+        currencyComboBox.setEditable(false);
 
         // Reset date picker
         dueDateTF.setValue(null);

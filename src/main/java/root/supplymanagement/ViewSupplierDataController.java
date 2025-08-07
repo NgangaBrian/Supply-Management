@@ -52,10 +52,14 @@ public class ViewSupplierDataController {
     private AnchorPane rootAnchorPane;
 
     private StackPane rootOverlay;
-
     int supplierId = -1; // Default value if supplier is not found
     Map<Integer, String> orderMap = new HashMap<>();
     String suppliername = null;
+
+    public void initialize() {
+        loadImages();
+        orderNoComboBox.setOnAction(event -> {handleOrderSelection();});
+    }
 
     public void generateReport() {
         showLoadingOverlay();
@@ -307,14 +311,6 @@ public class ViewSupplierDataController {
         }
     }
 
-
-
-
-    public void initialize() {
-        loadImages();
-        orderNoComboBox.setOnAction(event -> {handleOrderSelection();});
-    }
-
     private void handleOrderSelection() {
         String selectedOrderNo = orderNoComboBox.getValue(); // Get selected order number
         paymentsVbox.getChildren().clear();
@@ -348,12 +344,13 @@ public class ViewSupplierDataController {
                     int orderId = resultSet.getInt("order_id");
 //                    int supplierId = resultSet.getInt("supplier_id");
                     double paidAmount = resultSet.getDouble("paidAmount");
+                    String currency = resultSet.getString("currency");
                     String paymentsMethod = resultSet.getString("paymentMethod");
                     String referenceNo = resultSet.getString("referenceNo");
                     Date datePaid = resultSet.getDate("date");
                     String additionalNotes = resultSet.getString("additionalNotes");
 
-                    setDetailsToView(orderId, supplierId, paidAmount, paymentsMethod, referenceNo, datePaid, additionalNotes);
+                    setDetailsToView(orderId, supplierId, paidAmount, currency, paymentsMethod, referenceNo, datePaid, additionalNotes);
 
                 }
             }
@@ -425,14 +422,11 @@ public class ViewSupplierDataController {
     private void loadPaymentsData(int orderId, int supplierId) {
         String query = "SELECT * FROM payments WHERE order_id = ? AND supplier_id = ?";
 
-
         try (Connection connection = new DBConnection().getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-
                 preparedStatement.setInt(1, orderId);
                 preparedStatement.setInt(2, supplierId);
-
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
@@ -440,12 +434,13 @@ public class ViewSupplierDataController {
                    // int orderId = resultSet.getInt("order_id");
                     //int supplierId = resultSet.getInt("supplier_id");
                     double paidAmount = resultSet.getDouble("paidAmount");
+                    String currency = resultSet.getString("currency");
                     String paymentsMethod = resultSet.getString("paymentMethod");
                     String referenceNo = resultSet.getString("referenceNo");
                     Date datePaid = resultSet.getDate("date");
                     String additionalNotes = resultSet.getString("additionalNotes");
 
-                    setDetailsToView(orderId, supplierId, paidAmount, paymentsMethod, referenceNo, datePaid, additionalNotes);
+                    setDetailsToView(orderId, supplierId, paidAmount, currency, paymentsMethod, referenceNo, datePaid, additionalNotes);
 
                 }
             }
@@ -454,34 +449,33 @@ public class ViewSupplierDataController {
         }
     }
 
-    private void setDetailsToView(int orderId, int supplierId, double paidAmount, String paymentsMethod, String referenceNo, Date datePaid, String additionalNotes) {
+    private void setDetailsToView(int orderId, int supplierId, double paidAmount, String currency, String paymentsMethod, String referenceNo, Date datePaid, String additionalNotes) {
         String query = "SELECT orderNo, supplier FROM orders WHERE id = ?";
 
         // todo; use supplier id after changing the table orders
 
-        Connection connection = new DBConnection().getConnection();
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        try (Connection connection = new DBConnection().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)){
             preparedStatement.setInt(1, orderId);
             // todo; set supplierId to prepared statements after the todo above
 
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
 
-                String orderNo = resultSet.getString("orderNo");
-                String supplierName = resultSet.getString("supplier");
+                    String orderNo = resultSet.getString("orderNo");
+                    String supplierName = resultSet.getString("supplier");
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("paymentItem.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("paymentItem.fxml"));
 
-                Node node = loader.load();
-                PaymentItemController controller = loader.getController();
-                controller.setPaymentData(orderNo, supplierName, paidAmount, paymentsMethod,
-                        referenceNo, datePaid, additionalNotes);
-                paymentsVbox.getChildren().add(node);
+                    Node node = loader.load();
+                    PaymentItemController controller = loader.getController();
+                    controller.setPaymentData(orderNo, supplierName, paidAmount, currency, paymentsMethod,
+                            referenceNo, datePaid, additionalNotes);
+                    paymentsVbox.getChildren().add(node);
+                }
             }
-            preparedStatement.close();
-            connection.close();
         } catch (IOException | SQLException e){
             e.printStackTrace();
         }

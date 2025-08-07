@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -35,6 +36,7 @@ public class ViewPaymentsController implements Initializable {
 
     private final ObservableList<String> filterItems = FXCollections.observableArrayList("All", "Last 7 days", "Last 30 days", "Last 90 days");
 
+    private final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -57,7 +59,7 @@ public class ViewPaymentsController implements Initializable {
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 double paidAmount = rs.getDouble(1);
-                amountPaidLB.setText(String.valueOf(paidAmount));
+                amountPaidLB.setText(String.valueOf(moneyFormat.format(paidAmount)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,7 +73,7 @@ public class ViewPaymentsController implements Initializable {
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 int pendingPayments = rs.getInt(1);
-                pendingPaymentsLB.setText(String.valueOf(pendingPayments));
+                pendingPaymentsLB.setText(String.valueOf(moneyFormat.format(pendingPayments)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,7 +87,7 @@ public class ViewPaymentsController implements Initializable {
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 double totalBalance = rs.getDouble(1);
-                balanceLB.setText(String.valueOf(totalBalance));
+                balanceLB.setText(String.valueOf(moneyFormat.format(totalBalance)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -118,15 +120,13 @@ public class ViewPaymentsController implements Initializable {
                     int orderId = resultSet.getInt("order_id");
                     int supplierId = resultSet.getInt("supplier_id");
                     double paidAmount = resultSet.getDouble("paidAmount");
+                    String currency = resultSet.getString("currency");
                     String paymentsMethod = resultSet.getString("paymentMethod");
                     String referenceNo = resultSet.getString("referenceNo");
                     Date datePaid = resultSet.getDate("date");
                     String additionalNotes = resultSet.getString("additionalNotes");
 
-                    setDetailsToView(orderId, supplierId, paidAmount, paymentsMethod, referenceNo, datePaid, additionalNotes);
-
-
-
+                    setDetailsToView(orderId, supplierId, paidAmount, currency, paymentsMethod, referenceNo, datePaid, additionalNotes);
                 }
             }
         } catch (SQLException e) {
@@ -134,7 +134,7 @@ public class ViewPaymentsController implements Initializable {
         }
     }
 
-    private void setDetailsToView(int orderId, int supplierId, double paidAmount, String paymentsMethod, String referenceNo, Date datePaid, String additionalNotes) {
+    private void setDetailsToView(int orderId, int supplierId, double paidAmount, String currency, String paymentsMethod, String referenceNo, Date datePaid, String additionalNotes) {
 
         String query = "SELECT orderNo, supplier FROM orders WHERE id = ?";
 
@@ -158,7 +158,7 @@ public class ViewPaymentsController implements Initializable {
 
                 Node node = loader.load();
                 PaymentItemController controller = loader.getController();
-                controller.setPaymentData(orderNo, supplierName, paidAmount, paymentsMethod,
+                controller.setPaymentData(orderNo, supplierName, paidAmount, currency, paymentsMethod,
                         referenceNo, datePaid, additionalNotes);
                 paymentItems.getChildren().add(node);
             }
