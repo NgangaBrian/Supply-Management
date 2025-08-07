@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -59,6 +60,52 @@ public class RecordOrderController implements Initializable {
 
         paidAmountTF.textProperty().addListener((observable, oldValue, newValue) -> {
             updateBalance();
+        });
+
+        totalAmountTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                currencyComboBox.requestFocus();
+                currencyComboBox.show();
+            }
+        });
+
+        currencyComboBox.setOnAction(event -> {
+            paidAmountTF.requestFocus();
+        });
+
+        paidAmountTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                balanceTF.requestFocus();
+            }
+        });
+
+        balanceTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                invoiceNoTF.requestFocus();
+            }
+        });
+
+        invoiceNoTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                paymentMethodsCombo.requestFocus();
+                paymentMethodsCombo.show();
+            }
+        });
+
+        paymentMethodsCombo.setOnAction(event -> {
+            chequeNoTF.requestFocus();
+        });
+
+        chequeNoTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                dueDateTF.requestFocus();
+            }
+        });
+
+        dueDateTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                storeOrder();
+            }
         });
     }
 

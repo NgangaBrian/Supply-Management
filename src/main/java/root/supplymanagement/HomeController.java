@@ -32,6 +32,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
 import static com.mysql.cj.conf.PropertyKey.logger;
@@ -59,7 +60,7 @@ public class HomeController implements Initializable {
     private final double BASE_WIDTH = 780;
     private final double BASE_HEIGHT = 550;
 
-
+    private final DecimalFormat moneyFormat = new DecimalFormat("#,##0.##");
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -121,7 +122,7 @@ public class HomeController implements Initializable {
             ResultSet resultSet = preparedStatement.executeQuery()) {
             if(resultSet.next()){
                 int noOfSuppliers = resultSet.getInt(1);
-                suppliersLB.setText(String.valueOf(noOfSuppliers));
+                suppliersLB.setText(String.valueOf(moneyFormat.format(noOfSuppliers)));
             }
 
         } catch (SQLException e){
@@ -136,7 +137,7 @@ public class HomeController implements Initializable {
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 double paidAmount = rs.getDouble(1);
-                paymentsMadeLB.setText(String.valueOf(paidAmount));
+                paymentsMadeLB.setText(String.valueOf(moneyFormat.format(paidAmount)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -150,7 +151,7 @@ public class HomeController implements Initializable {
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 double totalBalance = rs.getDouble(1);
-                outstandingBalanceLB.setText(String.valueOf(totalBalance));
+                outstandingBalanceLB.setText(String.valueOf(moneyFormat.format(totalBalance)));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -164,7 +165,7 @@ public class HomeController implements Initializable {
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 int noOfOverdueInvoices = rs.getInt(1);
-                overdueInvoicesLB.setText(String.valueOf(noOfOverdueInvoices));
+                overdueInvoicesLB.setText(String.valueOf(moneyFormat.format(noOfOverdueInvoices)));
             }
         } catch (SQLException e) {
             e.printStackTrace();

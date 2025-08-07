@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -69,6 +70,40 @@ public class RecordPaymentController implements Initializable {
 
         saveBtn.setOnAction(event -> {
             savePaymentDetails();
+        });
+
+        supplierCombo.setOnAction(event -> {
+            orderNoCombo.requestFocus();
+            orderNoCombo.show();
+        });
+
+        orderNoCombo.setOnAction(event -> {
+            paidAmountTF.clear();
+        });
+
+        paidAmountTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                paymentMethodCombo.requestFocus();
+                paymentMethodCombo.show();
+            }
+        });
+
+        paymentMethodCombo.setOnAction(event -> {
+            referenceNoTF.requestFocus();
+        });
+
+        referenceNoTF.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                datePicker.requestFocus();
+                datePicker.setValue(LocalDate.now());
+                datePicker.show();
+            }
+        });
+
+        datePicker.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                savePaymentDetails();
+            }
         });
     }
 
@@ -251,6 +286,7 @@ public class RecordPaymentController implements Initializable {
                 currency = rs.getString("currency");
                 initialPaidAmount = Double.valueOf(rs.getString("paidAmount"));
                 balanceTF.setText(currency+ " " + String.valueOf(moneyFormat.format(balance)));
+                paidAmountTF.requestFocus();
             }
 
         } catch (SQLException e){
