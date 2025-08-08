@@ -29,6 +29,7 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.io.IOException;
 import java.sql.*;
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -75,7 +76,6 @@ public class ViewSupplierDataController {
                 generateSupplierPaymentReport(suppliername);
                 Platform.runLater(() -> {
                     hideLoadingOverlay();
-                    showAlert(Alert.AlertType.INFORMATION, "Report Generated", "PDF report generated successfully for: " + suppliername);
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -119,6 +119,9 @@ public class ViewSupplierDataController {
             Map<String, Double> currencyTotals = new HashMap<>();
             Map<String, Double> currencyPaid = new HashMap<>();
 
+            // ✅ FIX: Keep track of which orders we’ve already counted for totals
+            Set<String> countedOrders = new HashSet<>();
+
             while (rs.next()) {
                 if (supplierInfo.isEmpty()) {
                     supplierInfo.put("name", rs.getString("supplierName"));
@@ -150,7 +153,13 @@ public class ViewSupplierDataController {
                         k -> new ArrayList<>()).add(payment);
 
                 // Track totals
-                currencyTotals.merge(currency, totalAmount, Double::sum);
+                // ✅ FIX: Only count totalAmount once per order
+                String orderKey = orderNo + "|" + currency;
+                if (!countedOrders.contains(orderKey)) {
+                    currencyTotals.merge(currency, totalAmount, Double::sum);
+                    countedOrders.add(orderKey);
+                }
+
                 currencyPaid.merge(currency, paidAmount, Double::sum);
             }
 
@@ -232,7 +241,7 @@ public class ViewSupplierDataController {
             ));
 
             // Load logo image (make sure path is correct!)
-            ImageBuilder logo = Components.image("src/main/resources/Images/kimsalogo.png")
+            ImageBuilder logo = Components.image(getClass().getResource("/Images/kimsalogo.png"))
                     .setFixedDimension(60, 60)
                     .setHorizontalImageAlignment(HorizontalImageAlignment.CENTER);
 
@@ -257,9 +266,9 @@ public class ViewSupplierDataController {
 
                 currencyRows.add(Components.horizontalList(
                         Components.text(currency).setFixedWidth(80),
-                        Components.text(String.format("%.2f", total)).setFixedWidth(100),
-                        Components.text(String.format("%.2f", paid)).setFixedWidth(100),
-                        Components.text(String.format("%.2f", balance))
+                        Components.text(String.format("%,.2f", total)).setFixedWidth(100),
+                        Components.text(String.format("%,.2f", paid)).setFixedWidth(100),
+                        Components.text(String.format("%,.2f", balance))
                 ));
             }
 
