@@ -7,9 +7,9 @@ public class DBConnection {
     public Connection databaseLink;
 
     public Connection getConnection() {
-        String dbName = "SupplyManagement";
-        String dbUser = "root";
-        String dbPassword = "Brian123";
+        String dbName = "Kimsa";
+        String dbUser = "kimsa";
+        String dbPassword = "kimsa@101";
         String dbHost = "localhost";
         String dbPort = "3306";
 
