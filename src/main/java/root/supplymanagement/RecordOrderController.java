@@ -75,12 +75,6 @@ public class RecordOrderController implements Initializable {
 
         paidAmountTF.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                balanceTF.requestFocus();
-            }
-        });
-
-        balanceTF.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
                 invoiceNoTF.requestFocus();
             }
         });

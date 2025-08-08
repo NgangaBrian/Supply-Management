@@ -206,7 +206,7 @@ public class HomeController implements Initializable {
     }
 
     public void openViewPaymentsPane(javafx.scene.input.MouseEvent e) {
-        openFXML("view-payments.fxml", 1000, 607, null);
+        openFXML("view-payments.fxml", 1065, 607, null);
     }
 
     private void openFXML(String file, int width, int height, javafx.util.Callback<Object, Void> callback) {

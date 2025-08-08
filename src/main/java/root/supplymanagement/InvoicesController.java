@@ -117,13 +117,14 @@ public class InvoicesController implements Initializable {
                 String invoiceNo = resultSet.getString("invoiceNo");
                 String supplierName = resultSet.getString("supplier");
                 double paidAmount = resultSet.getDouble("paidAmount");
+                String currency = resultSet.getString("currency");
                 double balance = resultSet.getDouble("balance");
                 Date dueDate = resultSet.getDate("dueDate");
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("invoiceItem.fxml"));
                 Node node = loader.load();
                 InvoiceItemController controller = loader.getController();
-                controller.setInvoiceData(invoiceNo, supplierName, paidAmount, balance, dueDate);
+                controller.setInvoiceData(invoiceNo, supplierName, paidAmount, currency, balance, dueDate);
 
                 invoiceItemsVBox.getChildren().add(node);
             }

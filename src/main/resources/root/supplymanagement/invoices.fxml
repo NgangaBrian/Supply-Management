@@ -46,26 +46,41 @@
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="10.0" layoutY="24.0" text="Supplier Name">
                <HBox.margin>
                   <Insets left="80.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="47.0" layoutY="24.0" text="Amount Paid">
                <HBox.margin>
                   <Insets left="80.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="141.0" layoutY="24.0" text="Balance">
                <HBox.margin>
                   <Insets left="80.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="175.0" layoutY="24.0" text="Due Date">
                <HBox.margin>
-                  <Insets left="80.0" />
+                  <Insets left="90.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
          </children>
       </HBox>

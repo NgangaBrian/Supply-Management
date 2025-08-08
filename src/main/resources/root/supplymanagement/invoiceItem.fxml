@@ -11,24 +11,24 @@
             <Insets left="20.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="supplierNameLB" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="Brian Nganga">
+      <Label fx:id="supplierNameLB" alignment="CENTER" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="130.0" text="Brian Nganga">
          <HBox.margin>
             <Insets left="50.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="paidAmountLB" layoutX="43.0" layoutY="28.0" prefHeight="18.0" prefWidth="80.0" text="20,000,000">
+      <Label fx:id="paidAmountLB" alignment="CENTER" layoutX="43.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="20,000,000">
          <HBox.margin>
-            <Insets left="80.0" />
+            <Insets left="40.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="balanceLB" layoutX="76.0" layoutY="28.0" prefHeight="18.0" prefWidth="90.0" text="10,000,000">
+      <Label fx:id="balanceLB" alignment="CENTER" layoutX="76.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="10,000,000" textAlignment="CENTER">
          <HBox.margin>
-            <Insets left="80.0" />
+            <Insets left="50.0" />
          </HBox.margin>
       </Label>
       <Label fx:id="dueDateLB" layoutX="430.0" layoutY="28.0" prefHeight="18.0" prefWidth="97.0" text="04/03/2025">
          <HBox.margin>
-            <Insets left="80.0" />
+            <Insets left="50.0" />
          </HBox.margin>
       </Label>
    </children>

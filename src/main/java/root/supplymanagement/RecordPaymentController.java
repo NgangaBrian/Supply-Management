@@ -105,6 +105,10 @@ public class RecordPaymentController implements Initializable {
                 savePaymentDetails();
             }
         });
+
+        additionalNotesTA.setOnKeyPressed(event -> {
+            savePaymentDetails();
+        });
     }
 
 

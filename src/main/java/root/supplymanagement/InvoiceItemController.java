@@ -15,12 +15,12 @@ public class InvoiceItemController {
     private final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
 
-    public void setInvoiceData(String invoiceNo, String supplierName, Double paidAmount, Double balance, Date dueDate) {
+    public void setInvoiceData(String invoiceNo, String supplierName, Double paidAmount, String currency, Double balance, Date dueDate) {
         invoiceNoLB.setText(invoiceNo != null ? invoiceNo : "-");
         supplierNameLB.setText(supplierName != null ? supplierName : "-");
 
-        paidAmountLB.setText(paidAmount != null ? moneyFormat.format(paidAmount) : "0.00");
-        balanceLB.setText(balance != null ? moneyFormat.format(balance) : "0.00");
+        paidAmountLB.setText(currency + " " + String.valueOf(moneyFormat.format(paidAmount)));
+        balanceLB.setText(currency + " " + String.valueOf(moneyFormat.format(balance)));
         dueDateLB.setText(dueDate != null ? dateFormat.format(dueDate) : "N/A");
     }
 }

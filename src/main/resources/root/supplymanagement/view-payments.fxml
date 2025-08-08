@@ -13,75 +13,96 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="607.0" prefWidth="1000.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.ViewPaymentsController">
+<AnchorPane prefHeight="607.0" prefWidth="1065.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.ViewPaymentsController">
    <children>
-      <Pane prefHeight="22.0" prefWidth="1000.0">
+      <Pane prefHeight="22.0" prefWidth="1065.0">
          <children>
-            <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="973.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
+            <ImageView fx:id="closeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="1041.0" layoutY="3.0" onMouseClicked="#handleCloseBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="closeBtn">
                <image>
                   <Image url="@../../Images/closeBtn.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="maximizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="951.0" layoutY="3.0" onMouseClicked="#handleMaximizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
+            <ImageView fx:id="maximizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="1019.0" layoutY="3.0" onMouseClicked="#handleMaximizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
                <image>
                   <Image url="@../../Images/maximizeBtn.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="minimizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="929.0" layoutY="3.0" onMouseClicked="#handleMinimizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
+            <ImageView fx:id="minimizeBtnImage" fitHeight="17.0" fitWidth="23.0" layoutX="997.0" layoutY="3.0" onMouseClicked="#handleMinimizeBtnClick" pickOnBounds="true" preserveRatio="true" styleClass="minimize-maximize">
                <image>
                   <Image url="@../../Images/minimizeBtn.png" />
                </image>
             </ImageView>
          </children>
       </Pane>
-      <Pane prefHeight="3.0" prefWidth="1000.0" style="-fx-background-color: #0000FF;" />
+      <Pane prefHeight="3.0" prefWidth="1065.0" style="-fx-background-color: #0000FF;" />
       <Label layoutX="43.0" layoutY="22.0" text="Payments">
          <font>
             <Font name="DejaVu Serif Bold" size="24.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER_LEFT" layoutX="43.0" layoutY="146.0" prefHeight="46.0" prefWidth="933.0" style="-fx-background-color: FFFAFA;">
+      <HBox alignment="CENTER_LEFT" layoutX="43.0" layoutY="146.0" prefHeight="46.0" prefWidth="970.0" style="-fx-background-color: FFFAFA;">
          <children>
             <Label text="Order No.">
                <HBox.margin>
                   <Insets left="10.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="10.0" layoutY="24.0" text="Supplier Name">
                <HBox.margin>
                   <Insets left="40.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="47.0" layoutY="24.0" text="Amount Paid">
                <HBox.margin>
-                  <Insets left="40.0" />
+                  <Insets left="70.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="141.0" layoutY="24.0" text="Payment Method">
                <HBox.margin>
-                  <Insets left="40.0" />
+                  <Insets left="70.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="637.0" layoutY="24.0" text="Cheque No:">
                <HBox.margin>
-                  <Insets left="50.0" />
+                  <Insets left="40.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="175.0" layoutY="24.0" text="Date">
                <HBox.margin>
-                  <Insets left="70.0" />
+                  <Insets left="80.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
             <Label layoutX="664.0" layoutY="24.0" text="Note">
                <HBox.margin>
                   <Insets left="80.0" />
                </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
             </Label>
          </children>
       </HBox>
-      <ScrollPane layoutX="43.0" layoutY="202.0" prefHeight="365.0" prefWidth="933.0">
+      <ScrollPane layoutX="43.0" layoutY="202.0" prefHeight="365.0" prefWidth="987.0">
          <content>
-            <VBox fx:id="paymentItems" prefHeight="365.0" prefWidth="917.0" spacing="1.0" style="-fx-background-color: FFFAFA;">
+            <VBox fx:id="paymentItems" prefHeight="365.0" prefWidth="972.0" spacing="1.0" style="-fx-background-color: FFFAFA;">
                <rotationAxis>
                   <Point3D />
                </rotationAxis></VBox>

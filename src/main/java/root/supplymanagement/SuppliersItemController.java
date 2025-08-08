@@ -78,7 +78,7 @@ public class SuppliersItemController {
 
             // Show new window
             Stage stage = new Stage();
-            stage.setScene(new Scene(root, 876, 601));
+            stage.setScene(new Scene(root, 1065, 601));
             stage.initStyle(StageStyle.UNDECORATED);
             stage.show();
 
@@ -88,6 +88,8 @@ public class SuppliersItemController {
     }
 
     private void handleDeleteSupplier(MouseEvent event) {
+        event.consume();
+
         String email = supplierEmail.getText();
         String name = supplierName.getText();
 
@@ -115,6 +117,7 @@ public class SuppliersItemController {
     }
 
     private void handleEditSupplier(MouseEvent event) {
+        event.consume();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("add-suppliers.fxml"));
             Parent root = loader.load();

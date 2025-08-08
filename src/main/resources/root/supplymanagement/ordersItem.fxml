@@ -11,29 +11,29 @@
             <Insets left="20.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="supplierName" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="Brian Nganga">
+      <Label fx:id="supplierName" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="130.0" text="Brian Nganga">
+         <HBox.margin>
+            <Insets left="20.0" />
+         </HBox.margin>
+      </Label>
+      <Label fx:id="totalAmount" layoutX="43.0" layoutY="28.0" prefHeight="18.0" prefWidth="117.0" text="200,000">
          <HBox.margin>
             <Insets left="40.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="totalAmount" layoutX="43.0" layoutY="28.0" prefHeight="18.0" prefWidth="65.0" text="200,000">
+      <Label fx:id="paidAmount" layoutX="76.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="150,000">
          <HBox.margin>
-            <Insets left="70.0" />
+            <Insets left="30.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="paidAmount" layoutX="76.0" layoutY="28.0" prefHeight="18.0" prefWidth="74.0" text="150,000">
+      <Label fx:id="balAmount" layoutX="425.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="50,000">
          <HBox.margin>
-            <Insets left="70.0" />
-         </HBox.margin>
-      </Label>
-      <Label fx:id="balAmount" layoutX="425.0" layoutY="28.0" prefHeight="18.0" prefWidth="74.0" text="50,000">
-         <HBox.margin>
-            <Insets left="70.0" />
+            <Insets left="40.0" />
          </HBox.margin>
       </Label>
       <Label fx:id="dueDate" layoutX="499.0" layoutY="28.0" prefHeight="18.0" prefWidth="74.0" text="30/02/2025">
          <HBox.margin>
-            <Insets left="50.0" />
+            <Insets left="30.0" />
          </HBox.margin>
       </Label>
    </children>

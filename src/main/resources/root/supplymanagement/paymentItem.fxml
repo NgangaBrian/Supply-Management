@@ -4,41 +4,41 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 
-<HBox fx:id="supplietItemView" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="53.0" prefWidth="917.0" styleClass="supplier-item-view" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.PaymentItemController">
+<HBox fx:id="supplietItemView" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="53.0" prefWidth="970.0" styleClass="supplier-item-view" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="root.supplymanagement.PaymentItemController">
    <children>
       <Label fx:id="orderNo" prefHeight="18.0" prefWidth="71.0" text="KOS001">
+         <HBox.margin>
+            <Insets left="10.0" />
+         </HBox.margin>
+      </Label>
+      <Label fx:id="supplierName" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="130.0" text="Brian Nganga">
          <HBox.margin>
             <Insets left="20.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="supplierName" layoutX="10.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="Brian Nganga">
+      <Label fx:id="paidAmount" layoutX="43.0" layoutY="28.0" prefHeight="18.0" prefWidth="100.0" text="KES 2,000,000,000">
          <HBox.margin>
             <Insets left="30.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="paidAmount" layoutX="43.0" layoutY="28.0" prefHeight="18.0" prefWidth="70.0" text="20,000,000">
+      <Label fx:id="paymentMethod" layoutX="76.0" layoutY="28.0" prefHeight="18.0" prefWidth="108.0" text="Bank Transfer">
          <HBox.margin>
-            <Insets left="60.0" />
-         </HBox.margin>
-      </Label>
-      <Label fx:id="paymentMethod" layoutX="76.0" layoutY="28.0" prefHeight="18.0" prefWidth="69.0" text="Cheque">
-         <HBox.margin>
-            <Insets left="70.0" />
+            <Insets left="45.0" />
          </HBox.margin>
       </Label>
       <Label fx:id="paymentCode" layoutX="430.0" layoutY="28.0" prefHeight="18.0" prefWidth="119.0" text="ZTHCEFG847JSC8">
          <HBox.margin>
-            <Insets left="60.0" />
+            <Insets left="30.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="datePaid" layoutX="569.0" layoutY="28.0" prefHeight="18.0" prefWidth="82.0" text="06/02/2025">
+      <Label fx:id="datePaid" layoutX="569.0" layoutY="28.0" prefHeight="18.0" prefWidth="82.0" text="31 Jul 2025">
          <HBox.margin>
-            <Insets left="30.0" />
+            <Insets left="20.0" />
          </HBox.margin>
       </Label>
       <Label fx:id="additionalNotes" layoutX="688.0" layoutY="28.0" prefHeight="18.0" prefWidth="171.0" text="Remember to pay the rest">
          <HBox.margin>
-            <Insets left="30.0" />
+            <Insets left="25.0" />
          </HBox.margin>
       </Label>
    </children>

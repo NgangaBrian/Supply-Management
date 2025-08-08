@@ -88,7 +88,7 @@
                                  <Image url="@../../Images/overdueInvoices.png" />
                               </image>
                            </ImageView>
-                           <Label alignment="CENTER" contentDisplay="CENTER" layoutX="8.0" layoutY="77.0" prefHeight="18.0" prefWidth="114.0" text="Overdue Invoices">
+                           <Label alignment="CENTER" contentDisplay="CENTER" layoutX="8.0" layoutY="77.0" prefHeight="18.0" prefWidth="114.0" text=" Invoices">
                               <font>
                                  <Font name="System Bold" size="13.0" />
                               </font>
